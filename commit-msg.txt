@@ -1,0 +1,7 @@
+feat: HabitOS AI - intelligent habit tracking for HumanOS ecosystem
+
+Daily habit check-ins with AI coaching, streak tracking, mood integration,
+category breakdowns, and progress analytics. Built with Next.js 14,
+Prisma, NextAuth, OpenAI, Tailwind CSS dark UI.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
