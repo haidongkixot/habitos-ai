@@ -14,8 +14,11 @@ export default function Navbar() {
           <Link href="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold text-sm">H</div>
             <span className="text-white font-semibold text-lg">HabitOS</span>
+            <span className="text-gray-500 text-xs hidden sm:inline">by PeeTeeAI</span>
           </Link>
           <div className="hidden md:flex items-center gap-6">
+            <Link href="/about" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">About</Link>
+            <Link href="/pricing" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">Pricing</Link>
             <Link href="/dashboard" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">Dashboard</Link>
             <Link href="/habits" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">Habits</Link>
             <Link href="/progress" className="text-gray-300 hover:text-emerald-400 transition-colors text-sm">Progress</Link>

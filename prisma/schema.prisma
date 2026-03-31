@@ -18,11 +18,21 @@ model User {
   role          String    @default("user")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  status        String    @default("active")
+  statusNote    String?
   accounts      Account[]
   sessions      AuthSession[]
   habits        Habit[]
   checkins      CheckIn[]
   achievements  UserAchievement[]
+  gamification  UserGamification?
+  xpTransactions XpTransaction[]
+  dailyQuests   DailyQuest[]
+  userBadges    UserBadge[]
+  activityEvents ActivityEvent[]
+  notifications Notification[]
+  conversations AssistantConversation[]
+  subscriptions Subscription[]
 }
 
 model Account {
@@ -100,4 +110,203 @@ model UserAchievement {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId, achievement])
   @@index([userId])
+}
+
+// ============================================================
+// Gamification & XP
+// ============================================================
+
+model UserGamification {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  xp             Int      @default(0)
+  level          Int      @default(1)
+  currentStreak  Int      @default(0)
+  longestStreak  Int      @default(0)
+  lastCheckinDate String?
+  totalCheckins  Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model XpTransaction {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int
+  source    String
+  detail    String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+}
+
+model DailyQuest {
+  id          String   @id @default(cuid())
+  userId      String
+  date        String
+  questType   String
+  description String
+  xpReward    Int      @default(10)
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, date, questType])
+  @@index([userId, date])
+}
+
+model Badge {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  name        String
+  description String
+  icon        String      @default("award")
+  category    String      @default("general")
+  xpRequired  Int         @default(0)
+  createdAt   DateTime    @default(now())
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  id         String   @id @default(cuid())
+  userId     String
+  badgeId    String
+  unlockedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge      Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  @@unique([userId, badgeId])
+  @@index([userId])
+}
+
+// ============================================================
+// Activity & Analytics
+// ============================================================
+
+model ActivityEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  metadata  String?  @db.Text
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, type])
+  @@index([createdAt])
+}
+
+model ErrorLog {
+  id        String   @id @default(cuid())
+  level     String   @default("error")
+  source    String
+  message   String   @db.Text
+  stack     String?  @db.Text
+  metadata  String?  @db.Text
+  userId    String?
+  createdAt DateTime @default(now())
+  @@index([level, createdAt])
+  @@index([source])
+}
+
+// ============================================================
+// Notifications
+// ============================================================
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String   @db.Text
+  read      Boolean  @default(false)
+  readAt    DateTime?
+  metadata  String?  @db.Text
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, read])
+  @@index([createdAt])
+}
+
+// ============================================================
+// AI Assistant
+// ============================================================
+
+model AssistantConversation {
+  id        String             @id @default(cuid())
+  userId    String
+  title     String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  AssistantMessage[]
+  @@index([userId, updatedAt])
+}
+
+model AssistantMessage {
+  id             String               @id @default(cuid())
+  conversationId String
+  role           String
+  content        String               @db.Text
+  createdAt      DateTime             @default(now())
+  conversation   AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  @@index([conversationId, createdAt])
+}
+
+// ============================================================
+// CMS / Blog
+// ============================================================
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String?  @db.Text
+  content     String   @db.Text
+  coverImage  String?
+  authorId    String?
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  tags        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([published, publishedAt])
+}
+
+model SiteSettings {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+}
+
+// ============================================================
+// Billing / Subscriptions
+// ============================================================
+
+model Plan {
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  name          String
+  description   String?
+  priceMonthly  Int            @default(0)
+  priceYearly   Int            @default(0)
+  features      String?        @db.Text
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id              String    @id @default(cuid())
+  userId          String
+  planId          String
+  status          String    @default("active")
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  canceledAt      DateTime?
+  stripeSubId     String?   @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan            Plan      @relation(fields: [planId], references: [id])
+  @@index([userId, status])
+  @@index([stripeSubId])
 }
