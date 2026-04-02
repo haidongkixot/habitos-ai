@@ -20,6 +20,60 @@ const WEEK_LOG = [
   { day: 'Sunday', status: 'Rest day configured', mark: 'rest' },
 ]
 
+const TESTIMONIALS = [
+  {
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&q=80',
+    name: 'Sarah K.',
+    role: 'Product Designer',
+    text: 'Six weeks in, my morning routine is locked. HabitOS caught every slip before it became a pattern.',
+  },
+  {
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&q=80',
+    name: 'Marcus T.',
+    role: 'Software Engineer',
+    text: 'The recovery prompts are what make this different. Miss a day? It nudges you back without guilt.',
+  },
+  {
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&q=80',
+    name: 'Priya M.',
+    role: 'Freelancer',
+    text: 'Went from 40% to 88% weekly completion in a month. The streak view alone keeps me accountable.',
+  },
+]
+
+const LIFESTYLE_PHOTOS = [
+  {
+    src: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?w=600&q=80',
+    alt: 'Person checking off habit list',
+    label: 'Track daily',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80',
+    alt: 'Morning routine',
+    label: 'Own your mornings',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=600&q=80',
+    alt: 'Meditation and wellness',
+    label: 'Build stillness',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
+    alt: 'Person working productively',
+    label: 'Deep work daily',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80',
+    alt: 'Person happy and motivated',
+    label: 'Feel the progress',
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80',
+    alt: 'Person journaling with focus',
+    label: 'Reflect and reset',
+  },
+]
+
 function HabitBoard() {
   return (
     <div className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-5 sm:p-6">
@@ -103,7 +157,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* ── Hero ── */}
-        <section className="px-4 py-24 relative">
+        <section className="px-4 py-24 relative overflow-hidden">
           {/* Subtle radial gradient background */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.08),transparent_50%)] pointer-events-none" />
           <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative">
@@ -140,6 +194,25 @@ export default function Home() {
             {/* Right: habit board mockup */}
             <div>
               <HabitBoard />
+            </div>
+          </div>
+
+          {/* Hero lifestyle image — full-width accent below the grid */}
+          <div className="max-w-6xl mx-auto mt-20 relative">
+            <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] shadow-[0_0_60px_rgba(16,185,129,0.08)] backdrop-blur-sm">
+              {/* Dark + emerald overlay so image reads as part of the dark theme */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0c0c0f]/80 via-[#0c0c0f]/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-emerald-900/20 mix-blend-multiply z-10" />
+              <img
+                src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=1200&q=80"
+                alt="Person journaling and planning habits in moody lighting"
+                className="w-full h-64 sm:h-80 object-cover object-center"
+              />
+              {/* Floating glass card overlay */}
+              <div className="absolute bottom-6 left-6 z-20 bg-[#1c1c22]/80 backdrop-blur-md border border-white/[0.10] rounded-xl px-5 py-3 flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                <span className="text-zinc-300 text-sm font-medium">Your system. Your pace.</span>
+              </div>
             </div>
           </div>
         </section>
@@ -245,8 +318,47 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── Section 3: What a week looks like ── */}
+        {/* ── Real Results Photo Grid ── */}
         <section className="px-4 py-24 bg-[#16161a]/50">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
+                Real results
+              </p>
+              <h2 className="text-3xl font-bold text-white">
+                Built for the life you&apos;re building
+              </h2>
+              <p className="text-zinc-500 mt-3 max-w-md mx-auto">
+                Every habit is a vote for the person you&apos;re becoming.
+              </p>
+            </div>
+
+            {/* 3x2 photo grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {LIFESTYLE_PHOTOS.map((photo) => (
+                <div key={photo.src} className="relative group rounded-2xl overflow-hidden border border-white/[0.06] aspect-[4/3]">
+                  {/* Grayscale + emerald tint overlay */}
+                  <div className="absolute inset-0 bg-emerald-900/30 mix-blend-multiply z-10 group-hover:bg-emerald-900/10 transition-all duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c0f]/70 via-transparent to-transparent z-10" />
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-105"
+                  />
+                  {/* Label */}
+                  <div className="absolute bottom-3 left-3 z-20">
+                    <span className="text-white text-xs font-medium bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
+                      {photo.label}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Section 3: What a week looks like ── */}
+        <section className="px-4 py-24">
           <div className="max-w-3xl mx-auto">
             <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
               Product demo
@@ -294,6 +406,87 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── App Preview / Phone Mockup ── */}
+        <section className="px-4 py-24 bg-[#16161a]/50 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(16,185,129,0.05),transparent_60%)] pointer-events-none" />
+          <div className="max-w-6xl mx-auto relative">
+            <div className="text-center mb-14">
+              <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
+                App preview
+              </p>
+              <h2 className="text-3xl font-bold text-white">
+                Clean. Dark. Focused.
+              </h2>
+              <p className="text-zinc-500 mt-3">
+                Designed to disappear and let the habit take centre stage.
+              </p>
+            </div>
+
+            {/* Laptop frame mockup */}
+            <div className="max-w-3xl mx-auto">
+              <div className="relative bg-[#1c1c22] border border-white/[0.10] rounded-2xl shadow-[0_0_80px_rgba(16,185,129,0.08)] overflow-hidden">
+                {/* Browser chrome */}
+                <div className="bg-[#16161a] border-b border-white/[0.06] px-4 py-3 flex items-center gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-400/60" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
+                  </div>
+                  <div className="flex-1 mx-4">
+                    <div className="bg-white/5 border border-white/[0.06] rounded-md px-3 py-1 text-zinc-600 text-xs">
+                      habitos.app/dashboard
+                    </div>
+                  </div>
+                </div>
+
+                {/* Screenshot inner — lifestyle image with dark overlay as stand-in */}
+                <div className="relative h-72 sm:h-96 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#0c0c0f]/60 to-[#1c1c22]/80 z-10" />
+                  <div className="absolute inset-0 bg-emerald-900/10 mix-blend-multiply z-10" />
+                  <img
+                    src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80"
+                    alt="Person working with focus and intention"
+                    className="w-full h-full object-cover object-center"
+                  />
+                  {/* Floating UI element overlays */}
+                  <div className="absolute inset-0 z-20 p-6 flex flex-col justify-between">
+                    <div className="flex items-center justify-between">
+                      <div className="bg-[#1c1c22]/90 backdrop-blur-md border border-white/[0.10] rounded-xl px-4 py-2.5">
+                        <p className="text-zinc-500 text-xs mb-0.5">Today</p>
+                        <p className="text-white font-semibold text-sm">4 / 5 habits</p>
+                      </div>
+                      <div className="bg-[#1c1c22]/90 backdrop-blur-md border border-emerald-500/20 rounded-xl px-4 py-2.5">
+                        <p className="text-zinc-500 text-xs mb-0.5">Streak</p>
+                        <p className="text-emerald-400 font-semibold text-sm">12 days</p>
+                      </div>
+                    </div>
+                    <div className="bg-[#1c1c22]/90 backdrop-blur-md border border-white/[0.10] rounded-xl p-4">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
+                        <span className="text-white text-sm font-medium">Morning Routine complete</span>
+                      </div>
+                      <div className="flex gap-2">
+                        {['Run', 'Journal', 'Meditate', 'Water', 'Read'].map((h, i) => (
+                          <span
+                            key={h}
+                            className={`text-xs px-2 py-0.5 rounded-full ${
+                              i < 4
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
+                                : 'bg-white/5 text-zinc-500 border border-white/[0.06]'
+                            }`}
+                          >
+                            {h}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Section 4: User story ── */}
         <section className="px-4 py-24">
           <div className="max-w-3xl mx-auto">
@@ -323,6 +516,56 @@ export default function Home() {
                   <p className="text-zinc-500 text-xs mt-0.5">completion</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Testimonials ── */}
+        <section className="px-4 py-24 bg-[#16161a]/50">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-14">
+              <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
+                What people say
+              </p>
+              <h2 className="text-3xl font-bold text-white">
+                Consistency is contagious
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {TESTIMONIALS.map((t) => (
+                <div
+                  key={t.name}
+                  className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-6 hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(16,185,129,0.06)] transition-all duration-300"
+                >
+                  {/* Stars */}
+                  <div className="flex gap-0.5 mb-4">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <svg key={i} className="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+
+                  <p className="text-zinc-300 text-sm leading-relaxed mb-5">&ldquo;{t.text}&rdquo;</p>
+
+                  {/* Avatar + name */}
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <img
+                        src={t.avatar}
+                        alt={t.name}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-emerald-500/30"
+                      />
+                      <div className="absolute inset-0 rounded-full ring-1 ring-emerald-500/20" />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-medium">{t.name}</p>
+                      <p className="text-zinc-500 text-xs">{t.role}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
