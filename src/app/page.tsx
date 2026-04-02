@@ -22,28 +22,28 @@ const WEEK_LOG = [
 
 function HabitBoard() {
   return (
-    <div className="bg-neutral-900/60 border border-neutral-800/50 rounded-xl p-5 sm:p-6">
+    <div className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-5 sm:p-6">
       {/* Header row */}
       <div className="grid grid-cols-[140px_repeat(7,1fr)] gap-1.5 mb-1.5">
         <div />
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-neutral-500 text-xs font-medium">
+          <div key={d} className="text-center text-zinc-500 text-xs font-medium">
             {d}
           </div>
         ))}
       </div>
 
       {/* Habit rows */}
-      {HABITS.map((habit, i) => (
+      {HABITS.map((habit) => (
         <div key={habit.name} className="grid grid-cols-[140px_repeat(7,1fr)] gap-1.5 mb-1.5 items-center">
-          <div className="text-neutral-300 text-sm truncate pr-2">{habit.name}</div>
+          <div className="text-zinc-300 text-sm truncate pr-2">{habit.name}</div>
           {habit.checks.map((done, j) => (
             <div key={j} className="flex justify-center">
               <div
-                className={`w-8 h-8 rounded-md flex items-center justify-center text-xs font-medium ${
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                   done
-                    ? 'bg-emerald-500/80 text-white'
-                    : 'bg-neutral-800 text-neutral-600'
+                    ? 'bg-gradient-to-br from-emerald-500 to-teal-400 text-white shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                    : 'bg-white/5 text-zinc-600 border border-white/[0.06]'
                 }`}
               >
                 {done ? (
@@ -51,7 +51,7 @@ function HabitBoard() {
                     <path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 ) : (
-                  <span className="block w-2 h-2 rounded-full bg-neutral-600" />
+                  <span className="block w-2 h-2 rounded-full bg-zinc-700" />
                 )}
               </div>
             </div>
@@ -60,11 +60,11 @@ function HabitBoard() {
       ))}
 
       {/* Streak + Recovery row */}
-      <div className="mt-4 pt-3 border-t border-neutral-800/50 flex items-center justify-between text-sm">
-        <span className="text-neutral-400">
+      <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-sm">
+        <span className="text-amber-400 font-bold">
           12-day streak
         </span>
-        <span className="text-emerald-500/90 text-xs bg-emerald-500/10 px-2.5 py-1 rounded-md">
+        <span className="text-emerald-400 text-xs bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
           Missed &rarr; Recovered
         </span>
       </div>
@@ -74,26 +74,26 @@ function HabitBoard() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0f0f12] flex flex-col">
+    <div className="min-h-screen bg-[#0c0c0f] flex flex-col">
       {/* Nav */}
-      <nav className="border-b border-neutral-800/60 px-6 py-4">
+      <nav className="border-b border-white/[0.06] px-6 py-4 bg-[#0c0c0f]/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded bg-emerald-500 flex items-center justify-center text-white font-semibold text-xs">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-white font-semibold text-xs">
               H
             </div>
-            <span className="text-neutral-200 font-medium text-base">HabitOS</span>
+            <span className="text-white font-medium text-base">HabitOS</span>
           </div>
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="text-neutral-500 hover:text-neutral-300 text-sm transition-colors"
+              className="text-zinc-500 hover:text-white text-sm transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="/signup"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-1.5 rounded-lg text-sm transition-colors"
+              className="bg-gradient-to-r from-emerald-500 to-teal-400 hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] text-white px-5 py-1.5 rounded-full text-sm font-medium transition-all"
             >
               Get Started
             </Link>
@@ -103,32 +103,34 @@ export default function Home() {
 
       <main className="flex-1">
         {/* ── Hero ── */}
-        <section className="px-4 py-24">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <section className="px-4 py-24 relative">
+          {/* Subtle radial gradient background */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.08),transparent_50%)] pointer-events-none" />
+          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative">
             {/* Left: text */}
             <div>
-              <p className="text-neutral-500 text-sm mb-4 tracking-wide uppercase">
+              <p className="text-emerald-400/80 text-sm mb-4 tracking-wide uppercase font-medium">
                 Habit tracking, structured
               </p>
-              <h1 className="text-4xl sm:text-5xl font-semibold text-neutral-100 leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6">
                 Show up every day.
                 <br />
-                <span className="text-emerald-400">The rest follows.</span>
+                <span className="text-gradient">The rest follows.</span>
               </h1>
-              <p className="text-neutral-400 text-lg leading-relaxed mb-10 max-w-md">
+              <p className="text-zinc-400 text-lg leading-relaxed mb-10 max-w-md">
                 A simple system that tracks what you do, notices when you slip,
                 and helps you get back on track. No hype. Just consistency.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/signup"
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] text-white px-7 py-3 rounded-full text-sm font-semibold transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                 >
                   Build your first weekly routine
                 </Link>
                 <a
                   href="#habit-board"
-                  className="border border-neutral-700 hover:border-neutral-500 text-neutral-400 hover:text-neutral-200 px-6 py-2.5 rounded-lg text-sm transition-colors"
+                  className="bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white px-7 py-3 rounded-full text-sm transition-all"
                 >
                   See a sample habit system
                 </a>
@@ -145,27 +147,27 @@ export default function Home() {
         {/* ── Section 2: How habits actually stick ── */}
         <section className="px-4 py-24" id="habit-board">
           <div className="max-w-3xl mx-auto">
-            <p className="text-neutral-500 text-sm mb-3 tracking-wide uppercase">
+            <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
               Behavioral mechanics
             </p>
-            <h2 className="text-3xl font-semibold text-neutral-100 mb-16">
+            <h2 className="text-3xl font-bold text-white mb-16">
               How habits actually stick
             </h2>
 
             {/* Block 1: Repeat */}
             <div className="mb-20">
-              <h3 className="text-xl font-medium text-neutral-200 mb-2">Repeat</h3>
-              <p className="text-neutral-400 mb-6">Set it. See it. Do it.</p>
-              <div className="bg-neutral-900/60 border border-neutral-800/50 rounded-xl p-5">
-                <p className="text-neutral-500 text-xs mb-3 uppercase tracking-wide">Frequency</p>
+              <h3 className="text-xl font-semibold text-white mb-2">Repeat</h3>
+              <p className="text-zinc-400 mb-6">Set it. See it. Do it.</p>
+              <div className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-5">
+                <p className="text-zinc-500 text-xs mb-3 uppercase tracking-wide">Frequency</p>
                 <div className="flex gap-2 mb-4">
                   {['Daily', 'Weekdays', 'Mon / Wed / Fri', 'Custom'].map((opt, i) => (
                     <button
                       key={opt}
-                      className={`px-3 py-1.5 rounded-md text-xs transition-colors ${
+                      className={`px-3 py-1.5 rounded-full text-xs transition-all ${
                         i === 0
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                          : 'bg-neutral-800 text-neutral-500 border border-neutral-700/50'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.1)]'
+                          : 'bg-white/5 text-zinc-500 border border-white/10 hover:bg-white/10'
                       }`}
                     >
                       {opt}
@@ -176,7 +178,7 @@ export default function Home() {
                   {DAYS.map((d) => (
                     <div
                       key={d}
-                      className="h-9 rounded-md bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs"
+                      className="h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs"
                     >
                       {d}
                     </div>
@@ -187,23 +189,23 @@ export default function Home() {
 
             {/* Block 2: Recover */}
             <div className="mb-20">
-              <h3 className="text-xl font-medium text-neutral-200 mb-2">Recover</h3>
-              <p className="text-neutral-400 mb-6">Miss a day? Get a recovery prompt.</p>
-              <div className="bg-neutral-900/60 border border-neutral-800/50 rounded-xl p-5">
+              <h3 className="text-xl font-semibold text-white mb-2">Recover</h3>
+              <p className="text-zinc-400 mb-6">Miss a day? Get a recovery prompt.</p>
+              <div className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-5">
                 <div className="flex items-start gap-3">
-                  <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
                   <div>
-                    <p className="text-neutral-300 text-sm mb-1">
-                      You missed <span className="text-neutral-100 font-medium">Meditation</span> yesterday.
+                    <p className="text-zinc-300 text-sm mb-1">
+                      You missed <span className="text-white font-medium">Meditation</span> yesterday.
                     </p>
-                    <p className="text-neutral-500 text-sm mb-4">
+                    <p className="text-zinc-500 text-sm mb-4">
                       Resume with a 5-minute session?
                     </p>
                     <div className="flex gap-2">
-                      <button className="px-3 py-1.5 rounded-md text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                      <button className="px-3 py-1.5 rounded-full text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors">
                         Resume now
                       </button>
-                      <button className="px-3 py-1.5 rounded-md text-xs bg-neutral-800 text-neutral-500 border border-neutral-700/50">
+                      <button className="px-3 py-1.5 rounded-full text-xs bg-white/5 text-zinc-500 border border-white/10 hover:bg-white/10 transition-colors">
                         Skip today
                       </button>
                     </div>
@@ -214,14 +216,13 @@ export default function Home() {
 
             {/* Block 3: Reinforce */}
             <div>
-              <h3 className="text-xl font-medium text-neutral-200 mb-2">Reinforce</h3>
-              <p className="text-neutral-400 mb-6">Watch the pattern emerge.</p>
-              <div className="bg-neutral-900/60 border border-neutral-800/50 rounded-xl p-5">
-                <p className="text-neutral-500 text-xs mb-3 uppercase tracking-wide">
+              <h3 className="text-xl font-semibold text-white mb-2">Reinforce</h3>
+              <p className="text-zinc-400 mb-6">Watch the pattern emerge.</p>
+              <div className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-5">
+                <p className="text-zinc-500 text-xs mb-3 uppercase tracking-wide">
                   30-day completion
                 </p>
                 <div className="grid grid-cols-10 gap-1.5">
-                  {/* Deterministic pattern: sparse early, dense later */}
                   {[
                     1,0,1,0,0,1,1,0,1,1,
                     1,1,0,1,1,1,0,1,1,1,
@@ -229,13 +230,13 @@ export default function Home() {
                   ].map((filled, i) => (
                     <div
                       key={i}
-                      className={`w-full aspect-square rounded-sm ${
-                        filled ? 'bg-emerald-500/70' : 'bg-neutral-800'
+                      className={`w-full aspect-square rounded-md transition-all ${
+                        filled ? 'bg-gradient-to-br from-emerald-500/70 to-teal-400/70 shadow-[0_0_6px_rgba(16,185,129,0.2)]' : 'bg-white/5 border border-white/[0.06]'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="flex items-center justify-between mt-3 text-xs text-neutral-500">
+                <div className="flex items-center justify-between mt-3 text-xs text-zinc-500">
                   <span>Day 1</span>
                   <span>Day 30</span>
                 </div>
@@ -245,12 +246,12 @@ export default function Home() {
         </section>
 
         {/* ── Section 3: What a week looks like ── */}
-        <section className="px-4 py-24 bg-neutral-900/30">
+        <section className="px-4 py-24 bg-[#16161a]/50">
           <div className="max-w-3xl mx-auto">
-            <p className="text-neutral-500 text-sm mb-3 tracking-wide uppercase">
+            <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
               Product demo
             </p>
-            <h2 className="text-3xl font-semibold text-neutral-100 mb-12">
+            <h2 className="text-3xl font-bold text-white mb-12">
               What a week looks like
             </h2>
 
@@ -269,12 +270,12 @@ export default function Home() {
                   }}
                 >
                   <div className="min-w-[100px]">
-                    <span className="text-neutral-200 text-sm font-medium">{entry.day}</span>
+                    <span className="text-white text-sm font-medium">{entry.day}</span>
                   </div>
-                  <span className="text-neutral-400 text-sm">{entry.status}</span>
+                  <span className="text-zinc-400 text-sm">{entry.status}</span>
                   {entry.mark === 'done' && (
                     <svg
-                      className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"
+                      className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"
                       fill="none"
                       viewBox="0 0 16 16"
                     >
@@ -296,30 +297,30 @@ export default function Home() {
         {/* ── Section 4: User story ── */}
         <section className="px-4 py-24">
           <div className="max-w-3xl mx-auto">
-            <p className="text-neutral-500 text-sm mb-3 tracking-wide uppercase">
+            <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
               Case study
             </p>
-            <h2 className="text-3xl font-semibold text-neutral-100 mb-10">
+            <h2 className="text-3xl font-bold text-white mb-10">
               One person, six weeks
             </h2>
 
-            <div className="bg-neutral-900/60 border border-neutral-800/50 rounded-xl p-6 sm:p-8">
-              <p className="text-neutral-300 leading-relaxed mb-8">
+            <div className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-6 sm:p-8">
+              <p className="text-zinc-300 leading-relaxed mb-8">
                 James, a software engineer, started with 3 habits. After 6 weeks,
                 he maintained a 91% completion rate. His morning routine went from
                 &ldquo;chaotic&rdquo; to &ldquo;automatic.&rdquo;
               </p>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-neutral-800/60 border border-neutral-700/40 rounded-lg p-4">
-                  <p className="text-neutral-500 text-xs uppercase tracking-wide mb-1">Week 1</p>
-                  <p className="text-2xl font-semibold text-neutral-300">47%</p>
-                  <p className="text-neutral-500 text-xs mt-0.5">completion</p>
+                <div className="bg-white/5 border border-white/[0.06] rounded-2xl p-4">
+                  <p className="text-zinc-500 text-xs uppercase tracking-wide mb-1">Week 1</p>
+                  <p className="text-2xl font-bold text-zinc-300">47%</p>
+                  <p className="text-zinc-500 text-xs mt-0.5">completion</p>
                 </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
-                  <p className="text-neutral-500 text-xs uppercase tracking-wide mb-1">Week 6</p>
-                  <p className="text-2xl font-semibold text-emerald-400">91%</p>
-                  <p className="text-neutral-500 text-xs mt-0.5">completion</p>
+                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4">
+                  <p className="text-zinc-500 text-xs uppercase tracking-wide mb-1">Week 6</p>
+                  <p className="text-2xl font-bold text-gradient">91%</p>
+                  <p className="text-zinc-500 text-xs mt-0.5">completion</p>
                 </div>
               </div>
             </div>
@@ -327,19 +328,20 @@ export default function Home() {
         </section>
 
         {/* ── Section 5: CTA ── */}
-        <section className="px-4 py-24 bg-neutral-900/30">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-semibold text-neutral-100 mb-4">
+        <section className="px-4 py-24 relative">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(16,185,129,0.06),transparent_60%)] pointer-events-none" />
+          <div className="max-w-2xl mx-auto text-center relative">
+            <h2 className="text-3xl font-bold text-white mb-4">
               Your habits don&apos;t need motivation.
               <br />
-              They need a system.
+              <span className="text-gradient">They need a system.</span>
             </h2>
-            <p className="text-neutral-500 mb-10">
+            <p className="text-zinc-500 mb-10">
               Start with one habit. Build from there.
             </p>
             <Link
               href="/signup"
-              className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-lg text-sm font-medium transition-colors"
+              className="inline-block bg-gradient-to-r from-emerald-500 to-teal-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] text-white px-8 py-3 rounded-full text-sm font-semibold transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
             >
               Start building
             </Link>
@@ -348,10 +350,10 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-800/60 py-8 text-center text-neutral-600 text-sm">
+      <footer className="border-t border-white/[0.06] py-8 text-center text-zinc-600 text-sm">
         <p>
           HabitOS AI -- Part of the{' '}
-          <span className="text-emerald-500/70">HumanOS</span> ecosystem
+          <span className="text-gradient font-medium">HumanOS</span> ecosystem
         </p>
         <p className="mt-1.5">&copy; {new Date().getFullYear()} HumanOS. All rights reserved.</p>
       </footer>

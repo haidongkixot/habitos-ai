@@ -28,7 +28,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-950 border-t border-emerald-500/20">
+    <footer className="bg-[#0c0c0f] border-t border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {Object.entries(footerLinks).map(([category, links]) => (
@@ -44,14 +44,14 @@ export default function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-emerald-400 transition-colors text-sm"
+                        className="text-zinc-400 hover:text-white transition-colors text-sm"
                       >
                         {link.name}
                       </a>
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-gray-400 hover:text-emerald-400 transition-colors text-sm"
+                        className="text-zinc-400 hover:text-white transition-colors text-sm"
                       >
                         {link.name}
                       </Link>
@@ -63,20 +63,20 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800">
+        <div className="mt-12 pt-8 border-t border-white/[0.06]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm shadow-[0_0_12px_rgba(16,185,129,0.2)]">
                 H
               </div>
               <div>
                 <span className="text-white font-semibold">HabitOS AI</span>
-                <p className="text-gray-500 text-xs">
+                <p className="text-zinc-500 text-xs">
                   A PeeTeeAI Product &middot; Part of the HumanOS Ecosystem
                 </p>
               </div>
             </div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-zinc-500 text-sm">
               &copy; {new Date().getFullYear()} PeeTeeAI. All rights reserved.
             </p>
           </div>

@@ -29,13 +29,13 @@ export default function HabitCard({ id, name, category, color, checkedToday, tot
   }
 
   return (
-    <div className={`bg-gray-900 border rounded-xl p-4 transition-all ${checked ? 'border-emerald-500/50' : 'border-gray-800'}`}>
+    <div className={`bg-[#1c1c22]/80 backdrop-blur-sm border rounded-2xl p-4 transition-all duration-300 ${checked ? 'border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.08)]' : 'border-white/[0.06] hover:border-white/10'}`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={handleToggle}
             className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-              checked ? 'bg-emerald-500 scale-110' : 'bg-gray-800 border-2 border-gray-600 hover:border-emerald-400/50'
+              checked ? 'bg-gradient-to-br from-emerald-500 to-teal-400 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 border-2 border-white/10 hover:border-emerald-400/50'
             } ${animating ? 'animate-bounce' : ''}`}
           >
             {checked ? (
@@ -48,9 +48,9 @@ export default function HabitCard({ id, name, category, color, checkedToday, tot
             <h3 className={`font-medium ${checked ? 'text-emerald-400 line-through' : 'text-white'}`}>{name}</h3>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-xs">{CATEGORY_ICONS[category] || '✨'}</span>
-              <span className="text-xs text-gray-400">{category}</span>
-              <span className="text-xs text-gray-600">·</span>
-              <span className="text-xs text-gray-400">{totalCheckins} check-ins</span>
+              <span className="text-xs text-zinc-400">{category}</span>
+              <span className="text-xs text-zinc-600">·</span>
+              <span className="text-xs text-zinc-400">{totalCheckins} check-ins</span>
             </div>
           </div>
         </div>

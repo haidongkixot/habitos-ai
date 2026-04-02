@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = await prisma.blogPost.findFirst({
-    where: { slug: params.slug, status: 'published' },
+    where: { slug: params.slug, published: true },
   })
 
   if (!post) notFound()

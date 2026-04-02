@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-interface Post { id: string; title: string; slug: string; status: string; createdAt: string }
+interface Post { id: string; title: string; slug: string; published: boolean; createdAt: string }
 
 export default function AdminCmsPage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -30,11 +30,10 @@ export default function AdminCmsPage() {
   }
 
   const toggleStatus = async (post: Post) => {
-    const newStatus = post.status === 'published' ? 'draft' : 'published'
     await fetch('/api/admin/blog', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: post.id, status: newStatus }),
+      body: JSON.stringify({ id: post.id, published: !post.published }),
     })
     load()
   }
@@ -95,9 +94,9 @@ export default function AdminCmsPage() {
                 <td className="px-6 py-4 text-gray-400 font-mono text-xs">{post.slug}</td>
                 <td className="px-6 py-4">
                   <button onClick={() => toggleStatus(post)} className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                    post.status === 'published' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gray-700 text-gray-400'
+                    post.published ? 'bg-emerald-500/20 text-emerald-400' : 'bg-gray-700 text-gray-400'
                   }`}>
-                    {post.status}
+                    {post.published ? 'published' : 'draft'}
                   </button>
                 </td>
                 <td className="px-6 py-4 text-gray-500">{new Date(post.createdAt).toLocaleDateString()}</td>

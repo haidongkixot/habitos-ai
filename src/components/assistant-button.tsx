@@ -43,7 +43,7 @@ export default function AssistantButton() {
       {/* Floating button */}
       <button
         onClick={() => setOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 shadow-lg flex items-center justify-center transition-all duration-200 ${open ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-teal-400 shadow-[0_0_25px_rgba(16,185,129,0.3)] hover:shadow-[0_0_35px_rgba(16,185,129,0.4)] flex items-center justify-center transition-all duration-300 ${open ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         title="AI Coach"
       >
         <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -53,14 +53,14 @@ export default function AssistantButton() {
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-80 sm:w-96 bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col" style={{ height: '480px' }}>
+        <div className="fixed bottom-6 right-6 z-50 w-80 sm:w-96 bg-[#16161a] border border-white/10 rounded-2xl shadow-2xl shadow-black/50 flex flex-col" style={{ height: '480px' }}>
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800 rounded-t-2xl">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] rounded-t-2xl">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_6px_rgba(52,211,153,0.5)]" />
               <span className="text-sm font-semibold text-white">HabitOS Coach</span>
             </div>
-            <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+            <button onClick={() => setOpen(false)} className="text-zinc-400 hover:text-white transition-colors">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -72,15 +72,15 @@ export default function AssistantButton() {
             {messages.length === 0 && (
               <div className="text-center py-8">
                 <div className="text-3xl mb-2">🌿</div>
-                <p className="text-gray-400 text-sm">Hi! I&apos;m your HabitOS AI Coach. Ask me anything about building better habits!</p>
+                <p className="text-zinc-400 text-sm">Hi! I&apos;m your HabitOS AI Coach. Ask me anything about building better habits!</p>
               </div>
             )}
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
                   msg.role === 'user'
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-gray-800 text-gray-200'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-white'
+                    : 'bg-white/5 border border-white/[0.06] text-zinc-200'
                 }`}>
                   {msg.content}
                 </div>
@@ -88,11 +88,11 @@ export default function AssistantButton() {
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-gray-800 px-3 py-2 rounded-xl">
+                <div className="bg-white/5 border border-white/[0.06] px-3 py-2 rounded-xl">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 </div>
               </div>
@@ -101,7 +101,7 @@ export default function AssistantButton() {
           </div>
 
           {/* Input */}
-          <div className="p-3 border-t border-gray-800">
+          <div className="p-3 border-t border-white/[0.06]">
             <div className="flex gap-2">
               <input
                 type="text"
@@ -109,12 +109,12 @@ export default function AssistantButton() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && send()}
                 placeholder="Ask your coach..."
-                className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
               />
               <button
                 onClick={send}
                 disabled={loading || !input.trim()}
-                className="w-9 h-9 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-40 flex items-center justify-center transition-colors"
+                className="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] disabled:opacity-40 flex items-center justify-center transition-all"
               >
                 <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
