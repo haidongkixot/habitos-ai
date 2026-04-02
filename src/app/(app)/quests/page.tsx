@@ -49,16 +49,16 @@ export default function QuestsPage() {
       </div>
 
       {/* Overall progress */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+      <div className="card card-hover">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-300">Daily Progress</span>
           <span className="text-sm text-emerald-400 font-medium">
             {quests.length > 0 ? Math.round((completedCount / quests.length) * 100) : 0}%
           </span>
         </div>
-        <div className="w-full bg-gray-800 rounded-full h-3">
+        <div className="w-full bg-white/5 rounded-full h-3">
           <div
-            className="bg-emerald-500 h-3 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-emerald-500 to-teal-400 h-3 rounded-full transition-all duration-500"
             style={{ width: quests.length > 0 ? `${(completedCount / quests.length) * 100}%` : '0%' }}
           />
         </div>
@@ -69,7 +69,7 @@ export default function QuestsPage() {
           <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : quests.length === 0 ? (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-12 text-center">
+        <div className="card p-12 text-center">
           <div className="text-4xl mb-3">🎯</div>
           <h3 className="text-white font-medium mb-1">No quests available</h3>
           <p className="text-gray-400 text-sm">Check back soon for new daily quests!</p>
@@ -79,8 +79,8 @@ export default function QuestsPage() {
           {quests.map(q => (
             <div
               key={q.id}
-              className={`bg-gray-900 border rounded-xl p-4 transition-colors ${
-                q.completed ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-800'
+              className={`card card-hover transition-colors ${
+                q.completed ? 'border-emerald-500/30 bg-emerald-500/5' : ''
               }`}
             >
               <div className="flex items-center gap-4">
@@ -97,9 +97,9 @@ export default function QuestsPage() {
                     )}
                   </div>
                   {/* Progress bar per quest */}
-                  <div className="mt-2 w-full bg-gray-800 rounded-full h-1.5">
+                  <div className="mt-2 w-full bg-white/5 rounded-full h-1.5">
                     <div
-                      className={`h-1.5 rounded-full transition-all duration-500 ${q.completed ? 'bg-emerald-500' : 'bg-gray-700'}`}
+                      className={`h-1.5 rounded-full transition-all duration-500 ${q.completed ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-white/10'}`}
                       style={{ width: q.completed ? '100%' : '0%' }}
                     />
                   </div>
@@ -116,7 +116,7 @@ export default function QuestsPage() {
       )}
 
       {completedCount === quests.length && quests.length > 0 && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 text-center">
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-6 text-center">
           <div className="text-4xl mb-2">🎉</div>
           <h3 className="text-emerald-400 font-bold text-lg">All Quests Complete!</h3>
           <p className="text-gray-300 text-sm mt-1">You earned {totalXp} XP today. Come back tomorrow for new quests!</p>

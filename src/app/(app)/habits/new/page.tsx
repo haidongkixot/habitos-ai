@@ -30,30 +30,30 @@ export default function NewHabitPage() {
   return (
     <div className="max-w-lg mx-auto">
       <h1 className="text-3xl font-bold text-white mb-6">New Habit</h1>
-      <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="card space-y-5">
         <div>
           <label className="text-sm text-gray-400">Habit Name</label>
           <input type="text" value={name} onChange={e => setName(e.target.value)} required maxLength={100}
             placeholder="e.g., Meditate for 10 minutes"
-            className="w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-emerald-500 focus:outline-none" />
+            className="input-field w-full mt-1" />
         </div>
         <div>
           <label className="text-sm text-gray-400">Description (optional)</label>
           <textarea value={description} onChange={e => setDescription(e.target.value)} rows={2} maxLength={500}
-            className="w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-emerald-500 focus:outline-none resize-none" />
+            className="input-field w-full mt-1 resize-none" />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-gray-400">Category</label>
             <select value={category} onChange={e => setCategory(e.target.value)}
-              className="w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-emerald-500 focus:outline-none">
+              className="input-field w-full mt-1">
               {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <div>
             <label className="text-sm text-gray-400">Frequency</label>
             <select value={frequency} onChange={e => setFrequency(e.target.value)}
-              className="w-full mt-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:border-emerald-500 focus:outline-none">
+              className="input-field w-full mt-1">
               <option value="daily">Daily</option>
               <option value="weekdays">Weekdays</option>
               <option value="weekly">Weekly</option>
@@ -71,7 +71,7 @@ export default function NewHabitPage() {
           </div>
         </div>
         <button type="submit" disabled={loading}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white py-2.5 rounded-lg font-medium transition-colors">
+          className="btn-primary w-full disabled:opacity-50 justify-center">
           {loading ? 'Creating...' : 'Create Habit'}
         </button>
       </form>

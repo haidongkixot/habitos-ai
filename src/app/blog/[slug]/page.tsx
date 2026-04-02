@@ -10,9 +10,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   if (!post) notFound()
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[#0c0c0f]">
       <div className="max-w-3xl mx-auto px-4 py-16">
-        <Link href="/blog" className="text-emerald-400 hover:text-emerald-300 text-sm mb-8 block">← Back to Blog</Link>
+        <Link href="/blog" className="text-emerald-400 hover:text-emerald-300 text-sm mb-8 block transition-colors">← Back to Blog</Link>
         <h1 className="text-4xl font-bold text-white mb-4">{post.title}</h1>
         <p className="text-gray-500 text-sm mb-8">
           {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -20,9 +20,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         {post.excerpt && (
           <p className="text-lg text-gray-300 mb-8 leading-relaxed border-l-4 border-emerald-500 pl-4">{post.excerpt}</p>
         )}
-        <div className="prose prose-invert prose-emerald max-w-none">
+        <div className="card">
           {post.content ? (
-            <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">{post.content}</div>
+            <div className="text-gray-300 leading-relaxed whitespace-pre-wrap prose prose-invert prose-emerald max-w-none">{post.content}</div>
           ) : (
             <p className="text-gray-500">Content coming soon...</p>
           )}

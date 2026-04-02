@@ -81,7 +81,7 @@ export default function CoachPage() {
           <p className="text-gray-400 text-sm">Your personal habit-building assistant</p>
         </div>
         {!isPro && (
-          <div className="text-xs text-gray-400 bg-gray-900 border border-gray-800 rounded-lg px-3 py-1.5">
+          <div className="text-xs text-gray-400 glass rounded-xl px-3 py-1.5">
             {msgCount}/{msgLimit} messages today
           </div>
         )}
@@ -104,7 +104,7 @@ export default function CoachPage() {
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="text-left text-sm text-gray-300 bg-gray-900 border border-gray-800 hover:border-emerald-500/40 rounded-lg px-4 py-3 transition-colors"
+                  className="text-left text-sm text-gray-300 glass rounded-xl px-4 py-3 hover:border-emerald-500/40 transition-colors"
                 >
                   {s}
                 </button>
@@ -118,8 +118,8 @@ export default function CoachPage() {
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 m.role === 'user'
-                  ? 'bg-emerald-500 text-white rounded-br-md'
-                  : 'bg-gray-900 border border-gray-800 text-gray-200 rounded-bl-md'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-white rounded-br-md'
+                  : 'glass text-gray-200 rounded-bl-md'
               }`}
             >
               {m.content}
@@ -129,7 +129,7 @@ export default function CoachPage() {
 
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl rounded-bl-md px-4 py-3">
+            <div className="glass rounded-2xl rounded-bl-md px-4 py-3">
               <div className="flex gap-1">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -141,7 +141,7 @@ export default function CoachPage() {
       </div>
 
       {limitReached && (
-        <div className="bg-gray-900 border border-emerald-500/30 rounded-lg p-3 mb-3 text-center">
+        <div className="glass border-emerald-500/30 rounded-xl p-3 mb-3 text-center">
           <p className="text-gray-300 text-sm">You have used all {msgLimit} free messages today.</p>
           <a href="/pricing" className="text-emerald-400 text-sm font-medium hover:underline">
             Upgrade to Pro for unlimited coaching
@@ -157,12 +157,12 @@ export default function CoachPage() {
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
           placeholder={limitReached ? 'Upgrade to Pro to continue...' : 'Ask your coach anything...'}
           disabled={limitReached || loading}
-          className="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 disabled:opacity-50"
+          className="input-field flex-1 text-sm disabled:opacity-50"
         />
         <button
           onClick={() => send()}
           disabled={!input.trim() || limitReached || loading}
-          className="bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:hover:bg-emerald-500 text-white px-5 py-3 rounded-xl transition-colors"
+          className="btn-primary disabled:opacity-50 px-5 py-3"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

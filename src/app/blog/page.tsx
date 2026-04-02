@@ -8,7 +8,7 @@ export default async function BlogPage() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[#0c0c0f]">
       <div className="max-w-4xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-white mb-3">Blog</h1>
@@ -24,7 +24,7 @@ export default async function BlogPage() {
           <div className="grid gap-6">
             {posts.map(post => (
               <Link key={post.id} href={`/blog/${post.slug}`}
-                className="block bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-emerald-500/40 transition-colors group">
+                className="block card card-hover group">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h2 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors mb-2">

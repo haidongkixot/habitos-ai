@@ -8,13 +8,13 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[#0c0c0f]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <h1 className="text-4xl font-bold text-white mb-6">
-          About <span className="text-emerald-400">HabitOS AI</span>
+          About <span className="text-gradient">HabitOS AI</span>
         </h1>
 
-        <div className="prose prose-invert prose-emerald max-w-none space-y-8">
+        <div className="space-y-8">
           <section>
             <h2 className="text-2xl font-semibold text-white mt-10 mb-4">What is HabitOS AI?</h2>
             <p className="text-gray-300 leading-relaxed">
@@ -44,7 +44,7 @@ export default function AboutPage() {
               ].map((feature) => (
                 <div
                   key={feature.title}
-                  className="bg-gray-900 border border-emerald-500/20 rounded-xl p-6"
+                  className="card card-hover"
                 >
                   <h3 className="text-emerald-400 font-semibold text-lg mb-2">{feature.title}</h3>
                   <p className="text-gray-400 text-sm">{feature.description}</p>
@@ -74,7 +74,7 @@ export default function AboutPage() {
                   href={app.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-gray-900 border border-gray-800 hover:border-emerald-500/40 rounded-lg p-4 transition-colors"
+                  className="glass rounded-xl p-4 hover:border-emerald-500/40 transition-colors"
                 >
                   <p className="text-white font-medium text-sm">{app.name}</p>
                   <p className="text-gray-500 text-xs">{app.desc}</p>
@@ -98,13 +98,13 @@ export default function AboutPage() {
           <div className="mt-12 flex gap-4">
             <Link
               href="/login"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="btn-primary"
             >
               Get Started
             </Link>
             <Link
               href="/contact"
-              className="border border-gray-700 hover:border-emerald-500/40 text-gray-300 px-6 py-3 rounded-lg font-medium transition-colors"
+              className="btn-secondary"
             >
               Contact Us
             </Link>

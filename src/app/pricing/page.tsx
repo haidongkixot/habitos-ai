@@ -47,7 +47,7 @@ export default function PricingPage() {
   const [annual, setAnnual] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-[#0c0c0f]">
       {/* Nav back */}
       <div className="max-w-5xl mx-auto px-4 pt-6">
         <Link href="/" className="text-gray-400 hover:text-white text-sm transition-colors">
@@ -67,7 +67,7 @@ export default function PricingPage() {
             <span className={`text-sm ${!annual ? 'text-white' : 'text-gray-500'}`}>Monthly</span>
             <button
               onClick={() => setAnnual(!annual)}
-              className={`relative w-12 h-6 rounded-full transition-colors ${annual ? 'bg-emerald-500' : 'bg-gray-700'}`}
+              className={`relative w-12 h-6 rounded-full transition-colors ${annual ? 'bg-emerald-500' : 'bg-white/10'}`}
             >
               <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${annual ? 'translate-x-6' : ''}`} />
             </button>
@@ -83,12 +83,12 @@ export default function PricingPage() {
               key={plan.slug}
               className={`rounded-2xl p-6 ${
                 plan.highlighted
-                  ? 'bg-gray-900 border-2 border-emerald-500 relative'
-                  : 'bg-gray-900 border border-gray-800'
+                  ? 'bg-[#1c1c22]/80 backdrop-blur-sm border-2 border-emerald-500/60 relative shadow-[0_0_40px_rgba(16,185,129,0.1)]'
+                  : 'card'
               }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-teal-400 text-white text-xs font-bold px-3 py-1 rounded-full">
                   POPULAR
                 </div>
               )}
@@ -114,10 +114,10 @@ export default function PricingPage() {
 
               <Link
                 href={plan.href}
-                className={`block w-full text-center py-3 rounded-xl text-sm font-medium transition-colors ${
+                className={`block w-full text-center py-3 rounded-xl text-sm font-medium transition-all ${
                   plan.highlighted
-                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                    : 'bg-gray-800 hover:bg-gray-700 text-white'
+                    ? 'btn-primary'
+                    : 'btn-secondary'
                 }`}
               >
                 {plan.cta}

@@ -66,7 +66,7 @@ export default function LeaderboardPage() {
         <p className="text-gray-400 text-sm mt-1">Top habit builders ranked by XP</p>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+      <div className="card overflow-hidden p-0">
         {loading ? (
           <div className="p-12 text-center">
             <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
@@ -81,7 +81,7 @@ export default function LeaderboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-800">
+                <tr className="border-b border-white/[0.06]">
                   <th className="text-left text-xs text-gray-400 font-medium px-4 py-3 w-16">Rank</th>
                   <th className="text-left text-xs text-gray-400 font-medium px-4 py-3">Name</th>
                   <th className="text-center text-xs text-gray-400 font-medium px-4 py-3 w-16">Lvl</th>
@@ -92,7 +92,7 @@ export default function LeaderboardPage() {
               </thead>
               <tbody>
                 {entries.map(e => (
-                  <tr key={e.rank} className={`border-b border-gray-800/50 ${e.rank <= 3 ? 'bg-gray-800/30' : ''} hover:bg-gray-800/20 transition-colors`}>
+                  <tr key={e.rank} className={`border-b border-white/[0.04] ${e.rank <= 3 ? 'bg-white/[0.03]' : ''} hover:bg-white/[0.02] transition-colors`}>
                     <td className="px-4 py-3">
                       <span className={`text-sm font-bold ${e.rank === 1 ? 'text-yellow-400' : e.rank === 2 ? 'text-gray-300' : e.rank === 3 ? 'text-amber-600' : 'text-gray-500'}`}>
                         {getRankDisplay(e.rank)}
