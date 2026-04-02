@@ -1,4 +1,18 @@
 import Link from 'next/link'
+import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
+
+async function getSiteSettings() {
+  try {
+    const settings = await prisma.siteSettings.findMany({
+      where: { key: { in: ['hero_title', 'hero_subtitle', 'hero_description', 'stats_users', 'stats_habits', 'stats_streaks'] } },
+    })
+    return Object.fromEntries(settings.filter(s => s.value).map((s) => [s.key, s.value]))
+  } catch {
+    return {}
+  }
+}
 
 const HABITS = [
   { name: 'Morning Run', checks: [true, true, true, false, true, true, true] },
@@ -126,7 +140,11 @@ function HabitBoard() {
   )
 }
 
-export default function Home() {
+export default async function Home() {
+  const cms = await getSiteSettings()
+  const heroTitle = cms['hero_title'] || 'Show up every day.'
+  const heroSubtitle = cms['hero_subtitle'] || 'The rest follows.'
+  const heroDescription = cms['hero_description'] || 'A simple system that tracks what you do, notices when you slip, and helps you get back on track. No hype. Just consistency.'
   return (
     <div className="min-h-screen bg-[#0c0c0f] flex flex-col">
       {/* Nav */}
@@ -167,13 +185,12 @@ export default function Home() {
                 Habit tracking, structured
               </p>
               <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6">
-                Show up every day.
+                {heroTitle}
                 <br />
-                <span className="text-gradient">The rest follows.</span>
+                <span className="text-gradient">{heroSubtitle}</span>
               </h1>
               <p className="text-zinc-400 text-lg leading-relaxed mb-10 max-w-md">
-                A simple system that tracks what you do, notices when you slip,
-                and helps you get back on track. No hype. Just consistency.
+                {heroDescription}
               </p>
               <div className="flex flex-wrap gap-3">
                 <Link
