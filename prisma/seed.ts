@@ -238,6 +238,16 @@ async function main() {
   await prisma.activityEvent.create({ data: { userId: sarah.id, type: 'badge_earned', metadata: '{"badge":"month-streak"}', createdAt: daysAgo(5) } })
   console.log('  ✓ Activity Events')
 
+  // AI Configs
+  const aiConfigs = [
+    { contentType: 'habit_template', model: 'gpt-4o-mini', temperature: 0.9, maxTokens: 1000, systemPrompt: 'You are a habit science expert. Create evidence-based habit templates with clear descriptions, benefits, and actionable steps. Return ONLY valid JSON.', isActive: true },
+    { contentType: 'blog_post', model: 'gpt-4o-mini', temperature: 0.8, maxTokens: 1500, systemPrompt: 'You are a productivity and habit science writer. Write engaging, research-backed blog posts about habit building, behavior change, and personal growth. Return ONLY valid JSON.', isActive: true },
+  ]
+  for (const cfg of aiConfigs) {
+    await prisma.aIConfig.upsert({ where: { contentType: cfg.contentType }, update: {}, create: cfg })
+  }
+  console.log('  ✓ AI Configs')
+
   // Habit Templates
   const templatePacks = [
     // Pack 1: Morning Routine

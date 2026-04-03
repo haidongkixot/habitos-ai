@@ -14,6 +14,8 @@ const navLinks = [
   { href: '/admin/analytics', label: 'Analytics', icon: '📊' },
   { href: '/admin/plans', label: 'Plans', icon: '💳' },
   { href: '/admin/cms', label: 'Blog / CMS', icon: '📝' },
+  { href: '/admin/ai-config', label: 'AI Config', icon: '🎛️' },
+  { href: '/admin/ai-logs', label: 'AI Logs', icon: '📋' },
   { href: '/admin/logs', label: 'Error Logs', icon: '🔍' },
   { href: '/admin/notifications', label: 'Notifications', icon: '🔔' },
 ]

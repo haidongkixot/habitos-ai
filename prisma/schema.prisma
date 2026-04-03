@@ -315,6 +315,38 @@ model Subscription {
 // Habit Templates
 // ============================================================
 
+model AIGenerationLog {
+  id           String   @id @default(cuid())
+  contentType  String
+  action       String   @default("generate")
+  prompt       String   @db.Text
+  result       Json
+  model        String   @default("gpt-4o-mini")
+  tokensUsed   Int?
+  durationMs   Int?
+  status       String   @default("success")
+  error        String?  @db.Text
+  adminId      String
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([contentType])
+  @@index([adminId])
+  @@index([createdAt])
+}
+
+model AIConfig {
+  id           String   @id @default(cuid())
+  contentType  String   @unique
+  model        String   @default("gpt-4o-mini")
+  temperature  Float    @default(0.9)
+  maxTokens    Int      @default(1000)
+  systemPrompt String   @db.Text
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model HabitTemplate {
   id          String   @id @default(cuid())
   name        String
