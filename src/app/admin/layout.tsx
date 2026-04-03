@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/admin', label: 'Dashboard', icon: '▦' },
   { href: '/admin/users', label: 'Users', icon: '👥' },
   { href: '/admin/habits', label: 'Habits', icon: '✅' },
+  { href: '/admin/templates', label: 'Templates', icon: '📦' },
   { href: '/admin/checkins', label: 'Check-ins', icon: '📋' },
   { href: '/admin/achievements', label: 'Achievements', icon: '🏆' },
   { href: '/admin/analytics', label: 'Analytics', icon: '📊' },

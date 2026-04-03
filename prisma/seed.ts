@@ -238,6 +238,36 @@ async function main() {
   await prisma.activityEvent.create({ data: { userId: sarah.id, type: 'badge_earned', metadata: '{"badge":"month-streak"}', createdAt: daysAgo(5) } })
   console.log('  ✓ Activity Events')
 
+  // Habit Templates
+  const templatePacks = [
+    // Pack 1: Morning Routine
+    { name: 'Wake Up Early', description: 'Set your alarm for 5:30am and get out of bed immediately. Starting your day early gives you quiet hours for focused work and self-care before the world demands your attention.', category: 'wellness', frequency: 'daily', icon: '⏰', color: '#F59E0B', packName: 'Morning Routine', difficulty: 'intermediate', benefits: ['More productive hours', 'Better sleep schedule', 'Quiet time for focus'], sortOrder: 0 },
+    { name: 'Morning Meditation', description: 'Spend 10 minutes in mindful meditation to start the day. Focus on your breath, observe your thoughts without judgment, and set a calm intention for the day ahead.', category: 'wellness', frequency: 'daily', icon: '🧘', color: '#8B5CF6', packName: 'Morning Routine', difficulty: 'beginner', benefits: ['Reduced stress', 'Better focus', 'Emotional balance'], sortOrder: 1 },
+    { name: 'Morning Exercise', description: 'Complete a 20-minute workout within an hour of waking. Bodyweight exercises, yoga, or a brisk walk — movement in the morning boosts energy and mood for the entire day.', category: 'wellness', frequency: 'daily', icon: '💪', color: '#EF4444', packName: 'Morning Routine', difficulty: 'intermediate', benefits: ['Increased energy', 'Better mood', 'Improved metabolism'], sortOrder: 2 },
+    { name: 'Healthy Breakfast', description: 'Prepare and eat a nutritious breakfast with protein, healthy fats, and whole grains. Fuel your body properly to sustain energy and concentration through the morning.', category: 'wellness', frequency: 'daily', icon: '🥗', color: '#10B981', packName: 'Morning Routine', difficulty: 'beginner', benefits: ['Sustained energy', 'Better nutrition', 'Reduced cravings'], sortOrder: 3 },
+    { name: 'Morning Journaling', description: 'Spend 5 minutes writing in your journal. Capture your intentions for the day, reflect on gratitude, or free-write to clear your mind and start fresh.', category: 'wellness', frequency: 'daily', icon: '📝', color: '#3B82F6', packName: 'Morning Routine', difficulty: 'beginner', benefits: ['Mental clarity', 'Self-awareness', 'Goal alignment'], sortOrder: 4 },
+
+    // Pack 2: Fitness Fundamentals
+    { name: 'Daily Stretching', description: 'Dedicate 10 minutes to a full-body stretching routine. Focus on major muscle groups to improve flexibility, reduce injury risk, and relieve muscle tension from daily activities.', category: 'fitness', frequency: 'daily', icon: '🤸', color: '#EC4899', packName: 'Fitness Fundamentals', difficulty: 'beginner', benefits: ['Improved flexibility', 'Injury prevention', 'Stress relief'], sortOrder: 0 },
+    { name: 'Cardio Session', description: 'Complete a 30-minute cardio workout — running, cycling, swimming, or brisk walking. Consistent cardiovascular exercise strengthens your heart and boosts endurance.', category: 'fitness', frequency: 'daily', icon: '🏃', color: '#EF4444', packName: 'Fitness Fundamentals', difficulty: 'advanced', benefits: ['Heart health', 'Weight management', 'Better endurance'], sortOrder: 1 },
+    { name: 'Strength Training', description: 'Perform a structured weight training session 3 times per week. Progressive overload builds muscle, strengthens bones, and accelerates metabolism.', category: 'fitness', frequency: 'weekly', icon: '🏋️', color: '#F59E0B', packName: 'Fitness Fundamentals', difficulty: 'intermediate', benefits: ['Muscle growth', 'Stronger bones', 'Higher metabolism'], sortOrder: 2 },
+    { name: 'Hydration Tracking', description: 'Drink at least 8 glasses (2 liters) of water throughout the day. Proper hydration improves energy, skin health, digestion, and cognitive performance.', category: 'fitness', frequency: 'daily', icon: '💧', color: '#3B82F6', packName: 'Fitness Fundamentals', difficulty: 'beginner', benefits: ['Better energy', 'Improved skin', 'Better digestion'], sortOrder: 3 },
+
+    // Pack 3: Mindfulness
+    { name: 'Daily Meditation', description: 'Practice 15 minutes of seated meditation. Use guided meditation, body scans, or breath awareness to train your attention and cultivate inner peace.', category: 'mindfulness', frequency: 'daily', icon: '🧘', color: '#8B5CF6', packName: 'Mindfulness', difficulty: 'intermediate', benefits: ['Stress reduction', 'Emotional regulation', 'Better sleep'], sortOrder: 0 },
+    { name: 'Gratitude Practice', description: 'Write down 3 things you are grateful for each day. This simple practice rewires your brain toward positivity and increases overall life satisfaction.', category: 'mindfulness', frequency: 'daily', icon: '🙏', color: '#10B981', packName: 'Mindfulness', difficulty: 'beginner', benefits: ['Positive mindset', 'Better relationships', 'Life satisfaction'], sortOrder: 1 },
+    { name: 'Digital Detox', description: 'Spend 1 hour each day completely free from screens — no phone, laptop, or TV. Use the time for reading, walking, conversation, or creative pursuits.', category: 'mindfulness', frequency: 'daily', icon: '📵', color: '#EF4444', packName: 'Mindfulness', difficulty: 'intermediate', benefits: ['Reduced anxiety', 'Better presence', 'Improved creativity'], sortOrder: 2 },
+    { name: 'Evening Reflection', description: 'Spend 10 minutes before bed reviewing your day. What went well? What would you improve? This practice builds self-awareness and helps you sleep with a clear mind.', category: 'mindfulness', frequency: 'daily', icon: '🌙', color: '#3B82F6', packName: 'Mindfulness', difficulty: 'beginner', benefits: ['Self-awareness', 'Better sleep', 'Continuous improvement'], sortOrder: 3 },
+  ]
+
+  for (const t of templatePacks) {
+    const existing = await prisma.habitTemplate.findFirst({ where: { name: t.name, packName: t.packName } })
+    if (!existing) {
+      await prisma.habitTemplate.create({ data: t })
+    }
+  }
+  console.log('  ✓ Habit Templates')
+
   console.log('\n🎉 HabitOS seed complete!')
 }
 
