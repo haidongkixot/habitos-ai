@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 export default function ProgressPage() {
   const [data, setData] = useState<any>(null)
-  useEffect(() => { fetch('/api/progress').then(r => r.json()).then(setData).catch(() => {}) }, [])
+  useEffect(() => { fetch('/api/progress').then(r => { if (!r.ok) throw new Error('Failed'); return r.json() }).then(setData).catch(() => {}) }, [])
 
   if (!data) return <div className="text-gray-400 text-center py-12">Loading progress...</div>
 

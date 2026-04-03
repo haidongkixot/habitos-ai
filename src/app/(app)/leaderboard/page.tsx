@@ -108,7 +108,7 @@ export default function LeaderboardPage() {
                       <span className={`text-xs font-semibold ${getTierColor(e.tier)}`}>{e.tier}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <span className="text-sm text-gray-300">{e.xp.toLocaleString()}</span>
+                      <span className="text-sm text-gray-300">{(e.xp ?? 0).toLocaleString()}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
                       <span className="text-sm text-orange-400">{e.streak}d</span>

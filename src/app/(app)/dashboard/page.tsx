@@ -11,7 +11,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetch('/api/habits').then(r => r.json()).then(d => Array.isArray(d) && setHabits(d)).catch(() => {})
-    fetch('/api/progress').then(r => r.json()).then(setStats).catch(() => {})
+    fetch('/api/progress').then(r => {
+      if (!r.ok) throw new Error('Failed to fetch')
+      return r.json()
+    }).then(setStats).catch(() => {})
   }, [])
 
   const handleToggle = async (habitId: string, checked: boolean) => {
