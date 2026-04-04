@@ -34,6 +34,9 @@ model User {
   conversations   AssistantConversation[]
   subscriptions    Subscription[]
   chapterProgress  UserChapterProgress[]
+  journalEntries   JournalEntry[]
+  automaticityAssessments AutomaticityAssessment[]
+  environmentAudits EnvironmentAudit[]
 }
 
 model Account {
@@ -80,10 +83,16 @@ model Habit {
   icon        String    @default("check")
   isActive    Boolean   @default(true)
   reminderTime String?
+  intentionCue      String?
+  intentionLocation String?
+  intentionTime     String?
+  intentionStatement String? @db.Text
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   checkins    CheckIn[]
+  automaticityAssessments AutomaticityAssessment[]
+  environmentAudits EnvironmentAudit[]
   @@index([userId, isActive])
 }
 
@@ -405,4 +414,51 @@ model UserChapterProgress {
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId, chapterId])
   @@index([userId])
+}
+
+// ============================================================
+// Academy Tools (Research-Driven Features)
+// ============================================================
+
+model JournalEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  prompt    String   @db.Text
+  response  String   @db.Text
+  habitName String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+}
+
+model AutomaticityAssessment {
+  id              String   @id @default(cuid())
+  userId          String
+  habitId         String
+  withoutThinking Int
+  feelWeirdNot    Int
+  partOfRoutine   Int
+  needReminder    Int
+  score           Int
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habit           Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+  @@index([habitId])
+}
+
+model EnvironmentAudit {
+  id              String   @id @default(cuid())
+  userId          String
+  habitId         String
+  cueVisibility   Int
+  frictionLevel   Int
+  competingTemptations Int
+  score           Int
+  suggestions     String?  @db.Text
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habit           Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  @@index([userId, createdAt])
+  @@index([habitId])
 }

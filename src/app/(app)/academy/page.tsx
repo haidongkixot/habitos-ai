@@ -135,6 +135,54 @@ export default function AcademyPage() {
         ))}
       </div>
 
+      {/* Interactive Tools */}
+      <div className="mt-12 mb-10">
+        <h2 className="text-2xl font-bold text-white mb-2">Interactive Tools</h2>
+        <p className="text-zinc-400 text-sm mb-6">Research-driven exercises to deepen your practice and accelerate habit formation.</p>
+        <div className="grid md:grid-cols-2 gap-4">
+          <Link
+            href="/academy/automaticity"
+            className="group bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:bg-white/[0.06] hover:border-emerald-500/30 transition-all"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-xl">&#x1F4CA;</div>
+              <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Automaticity Assessment</h3>
+            </div>
+            <p className="text-sm text-zinc-400">Rate how automatic each habit has become using the Self-Report Habit Index.</p>
+          </Link>
+          <Link
+            href="/academy/intentions"
+            className="group bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:bg-white/[0.06] hover:border-emerald-500/30 transition-all"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-xl">&#x1F3AF;</div>
+              <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Intention Builder</h3>
+            </div>
+            <p className="text-sm text-zinc-400">Create implementation intentions using Gollwitzer&apos;s when-where-how formula.</p>
+          </Link>
+          <Link
+            href="/academy/identity"
+            className="group bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:bg-white/[0.06] hover:border-emerald-500/30 transition-all"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-xl">&#x1F4DD;</div>
+              <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Identity Journal</h3>
+            </div>
+            <p className="text-sm text-zinc-400">Daily identity-based reflections inspired by James Clear&apos;s habit philosophy.</p>
+          </Link>
+          <Link
+            href="/academy/environment"
+            className="group bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 hover:bg-white/[0.06] hover:border-emerald-500/30 transition-all"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-xl">&#x1F3E0;</div>
+              <h3 className="font-semibold text-white group-hover:text-emerald-400 transition-colors">Environment Audit</h3>
+            </div>
+            <p className="text-sm text-zinc-400">Audit cue visibility, friction, and temptations using Wood &amp; Neal&apos;s framework.</p>
+          </Link>
+        </div>
+      </div>
+
       {chapters.length === 0 && !loading && (
         <div className="text-center py-16 text-zinc-500">
           <p className="text-lg mb-2">No chapters available yet</p>
