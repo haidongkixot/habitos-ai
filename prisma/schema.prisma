@@ -31,8 +31,9 @@ model User {
   userBadges    UserBadge[]
   activityEvents ActivityEvent[]
   notifications Notification[]
-  conversations AssistantConversation[]
-  subscriptions Subscription[]
+  conversations   AssistantConversation[]
+  subscriptions    Subscription[]
+  chapterProgress  UserChapterProgress[]
 }
 
 model Account {
@@ -362,4 +363,46 @@ model HabitTemplate {
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ============================================================
+// Academy
+// ============================================================
+
+model AcademyChapter {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  subtitle     String?
+  body         String   @db.Text
+  category     String
+  orderIndex   Int      @default(0)
+  imageUrl     String?
+  readTimeMin  Int      @default(5)
+  keyTakeaways String[]
+  isActive     Boolean  @default(true)
+  minPlanSlug  String   @default("free")
+  quizData     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  progress     UserChapterProgress[]
+  @@index([category])
+  @@index([isActive, orderIndex])
+}
+
+model UserChapterProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  chapterId   String
+  completed   Boolean   @default(false)
+  readPercent Int       @default(0)
+  quizScore   Int?
+  quizPassed  Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  chapter     AcademyChapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([userId, chapterId])
+  @@index([userId])
 }

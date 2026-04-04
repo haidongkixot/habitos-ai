@@ -22,6 +22,7 @@ export default function Navbar() {
             <Link href="/dashboard" className="text-zinc-400 hover:text-white transition-colors text-sm">Dashboard</Link>
             <Link href="/habits" className="text-zinc-400 hover:text-white transition-colors text-sm">Habits</Link>
             <Link href="/progress" className="text-zinc-400 hover:text-white transition-colors text-sm">Progress</Link>
+            <Link href="/academy" className="text-zinc-400 hover:text-white transition-colors text-sm">Academy</Link>
             {session ? (
               <button onClick={() => signOut()} className="text-zinc-400 hover:text-white text-sm transition-colors">Sign Out</button>
             ) : (
