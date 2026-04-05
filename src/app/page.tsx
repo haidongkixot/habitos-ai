@@ -587,6 +587,46 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* ── Academy ── */}
+        <section className="px-4 py-24">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-14">
+              <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
+                Academy
+              </p>
+              <h2 className="text-3xl font-bold text-white">
+                Learn the Science
+              </h2>
+              <p className="text-zinc-500 mt-3 max-w-md mx-auto">
+                Master the research behind habit formation with structured lessons.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+              {[
+                { title: 'The Habit Loop', subtitle: 'Cue, routine, reward -- the neurological pattern behind every habit', icon: '🔄' },
+                { title: 'The 66-Day Truth', subtitle: 'What science actually says about how long habits take to form', icon: '📅' },
+                { title: 'Environment Design', subtitle: 'How your surroundings shape your behavior more than willpower', icon: '🏠' },
+              ].map((ch) => (
+                <div key={ch.title} className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-6 hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(16,185,129,0.06)] transition-all duration-300">
+                  <div className="text-3xl mb-4">{ch.icon}</div>
+                  <h3 className="text-white font-semibold text-sm mb-2">{ch.title}</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed">{ch.subtitle}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/academy"
+                className="inline-block bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white px-7 py-3 rounded-full text-sm transition-all"
+              >
+                Explore Academy &rarr;
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* ── Section 5: CTA ── */}
         <section className="px-4 py-24 relative">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(16,185,129,0.06),transparent_60%)] pointer-events-none" />
