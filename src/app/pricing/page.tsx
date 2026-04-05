@@ -10,12 +10,14 @@ const PLANS = [
     priceYearly: 0,
     description: 'Get started with habit tracking',
     features: [
-      '5 habits',
-      'Basic statistics',
-      '3 AI coach messages/day',
-      '7-day history',
-      'Basic streaks',
-      'Daily quests',
+      { text: 'Beginner templates', level: 'beginner' },
+      { text: '2 Academy chapters', level: 'beginner' },
+      { text: '5 habits', level: null },
+      { text: 'Basic statistics', level: null },
+      { text: '3 AI coach messages/day', level: null },
+      { text: '7-day history', level: null },
+      { text: 'Basic streaks', level: null },
+      { text: 'Daily quests', level: null },
     ],
     cta: 'Get Started',
     href: '/signup',
@@ -28,14 +30,16 @@ const PLANS = [
     priceYearly: 39.99,
     description: 'Unlimited habits and full AI coaching',
     features: [
-      'Unlimited habits',
-      'Full statistics & insights',
-      'Unlimited AI coaching',
-      'Complete history',
-      'Streak freezes',
-      'Priority support',
-      'Custom themes',
-      'Advanced analytics',
+      { text: 'All templates (Intermediate + Advanced)', level: 'advanced' },
+      { text: 'All Academy chapters', level: 'advanced' },
+      { text: 'All interactive tools', level: 'intermediate' },
+      { text: 'Unlimited habits', level: null },
+      { text: 'Full statistics & insights', level: null },
+      { text: 'Unlimited AI coaching', level: null },
+      { text: 'Complete history', level: null },
+      { text: 'Streak freezes', level: null },
+      { text: 'Priority support', level: null },
+      { text: 'Advanced analytics', level: null },
     ],
     cta: 'Start Pro Trial',
     href: '/signup?plan=pro',
@@ -125,11 +129,20 @@ export default function PricingPage() {
 
               <ul className="mt-6 space-y-3">
                 {plan.features.map(f => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-gray-300">
+                  <li key={f.text} className="flex items-center gap-2 text-sm text-gray-300">
                     <svg className={`w-4 h-4 flex-shrink-0 ${plan.highlighted ? 'text-emerald-400' : 'text-gray-500'}`} fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    {f}
+                    <span className="flex items-center gap-2">
+                      {f.text}
+                      {f.level && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
+                          f.level === 'beginner' ? 'bg-emerald-500/20 text-emerald-400' :
+                          f.level === 'intermediate' ? 'bg-amber-500/20 text-amber-400' :
+                          'bg-red-500/20 text-red-400'
+                        }`}>{f.level}</span>
+                      )}
+                    </span>
                   </li>
                 ))}
               </ul>

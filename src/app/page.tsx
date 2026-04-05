@@ -587,8 +587,56 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Academy ── */}
+        {/* ── Content Tiers ── */}
         <section className="px-4 py-24">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-14">
+              <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">
+                Content levels
+              </p>
+              <h2 className="text-3xl font-bold text-white">
+                Grow at your own pace
+              </h2>
+              <p className="text-zinc-500 mt-3 max-w-md mx-auto">
+                Content progresses with you. Start free, unlock more as you advance.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-10">
+              {[
+                { plan: 'Free', badge: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', items: ['Beginner habit templates', '2 Academy chapters', 'Basic statistics', '5 habits'], icon: '🌱' },
+                { plan: 'Pro', badge: 'bg-purple-500/20 text-purple-400 border-purple-500/30', items: ['All templates (Intermediate + Advanced)', 'All Academy chapters', 'All interactive tools', 'Unlimited habits + AI coaching'], icon: '🌳' },
+              ].map((tier) => (
+                <div key={tier.plan} className="bg-[#1c1c22]/80 backdrop-blur-sm border border-white/[0.06] rounded-2xl p-6 hover:border-emerald-500/20 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl">{tier.icon}</span>
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${tier.badge}`}>{tier.plan}</span>
+                  </div>
+                  <ul className="space-y-2">
+                    {tier.items.map((item) => (
+                      <li key={item} className="text-sm text-zinc-400 flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-emerald-500 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/pricing"
+                className="inline-block bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-300 hover:text-white px-7 py-3 rounded-full text-sm transition-all"
+              >
+                See Pricing &rarr;
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Academy ── */}
+        <section className="px-4 py-24 bg-[#16161a]/50">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-14">
               <p className="text-emerald-400/80 text-sm mb-3 tracking-wide uppercase font-medium">

@@ -1,11 +1,21 @@
 'use client'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Navbar() {
   const { data: session } = useSession()
   const [open, setOpen] = useState(false)
+  const [userPlan, setUserPlan] = useState<string>('free')
+
+  useEffect(() => {
+    if (session) {
+      fetch('/api/academy')
+        .then(r => r.json())
+        .then(d => { if (d.userPlan) setUserPlan(d.userPlan) })
+        .catch(() => {})
+    }
+  }, [session])
 
   return (
     <nav className="bg-[#0c0c0f]/80 backdrop-blur-xl border-b border-white/[0.06] sticky top-0 z-40">
@@ -24,7 +34,14 @@ export default function Navbar() {
             <Link href="/progress" className="text-zinc-400 hover:text-white transition-colors text-sm">Progress</Link>
             <Link href="/academy" className="text-zinc-400 hover:text-white transition-colors text-sm">Academy</Link>
             {session ? (
-              <button onClick={() => signOut()} className="text-zinc-400 hover:text-white text-sm transition-colors">Sign Out</button>
+              <>
+                <Link href="/pricing" className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                  userPlan === 'pro' ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' : 'bg-zinc-800 text-zinc-400 border-zinc-700'
+                }`}>
+                  {userPlan === 'pro' ? 'Pro' : 'Free'}
+                </Link>
+                <button onClick={() => signOut()} className="text-zinc-400 hover:text-white text-sm transition-colors">Sign Out</button>
+              </>
             ) : (
               <Link href="/login" className="btn-primary text-sm !px-5 !py-2">Sign In</Link>
             )}

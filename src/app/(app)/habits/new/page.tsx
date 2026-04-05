@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 type Template = {
   id: string
@@ -24,6 +25,12 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   advanced: 'bg-red-500/20 text-red-400',
 }
 
+function canAccessTemplate(userPlan: string, difficulty: string): boolean {
+  if (difficulty === 'beginner') return true
+  // intermediate and advanced require pro
+  return userPlan === 'pro'
+}
+
 export default function NewHabitPage() {
   const router = useRouter()
   const [name, setName] = useState('')
@@ -38,6 +45,7 @@ export default function NewHabitPage() {
   const [loadingTemplates, setLoadingTemplates] = useState(true)
   const [adoptingId, setAdoptingId] = useState<string | null>(null)
   const [showTemplates, setShowTemplates] = useState(true)
+  const [userPlan, setUserPlan] = useState<string>('free')
 
   useEffect(() => {
     fetch('/api/templates')
@@ -45,6 +53,13 @@ export default function NewHabitPage() {
       .then((data) => setPacks(data.packs || {}))
       .catch(() => setPacks({}))
       .finally(() => setLoadingTemplates(false))
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/academy')
+      .then(r => r.json())
+      .then(d => { if (d.userPlan) setUserPlan(d.userPlan) })
+      .catch(() => {})
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -133,55 +148,79 @@ export default function NewHabitPage() {
                       {packName}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {templates.map((t) => (
-                        <div
-                          key={t.id}
-                          className="bg-gray-900/60 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition-colors group"
-                        >
-                          <div className="flex items-start gap-3 mb-2">
-                            <span
-                              className="text-2xl flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg"
-                              style={{ backgroundColor: t.color + '20' }}
-                            >
-                              {t.icon}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-white text-sm font-medium truncate">
-                                {t.name}
-                              </div>
-                              <div className="text-gray-500 text-xs mt-0.5 line-clamp-2">
-                                {t.description}
+                      {templates.map((t) => {
+                        const locked = !canAccessTemplate(userPlan, t.difficulty)
+                        return (
+                          <div
+                            key={t.id}
+                            className="bg-gray-900/60 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition-colors group relative"
+                          >
+                            <div className="flex items-start gap-3 mb-2">
+                              <span
+                                className="text-2xl flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg"
+                                style={{ backgroundColor: t.color + '20' }}
+                              >
+                                {t.icon}
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-white text-sm font-medium truncate">
+                                  {t.name}
+                                </div>
+                                <div className="text-gray-500 text-xs mt-0.5 line-clamp-2">
+                                  {t.description}
+                                </div>
                               </div>
                             </div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="text-xs text-gray-500 capitalize">{t.frequency}</span>
+                              <span className="text-gray-700">&#183;</span>
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
+                                  DIFFICULTY_COLORS[t.difficulty] || 'bg-gray-700 text-gray-300'
+                                }`}
+                              >
+                                {t.difficulty}
+                              </span>
+                            </div>
+                            {locked ? (
+                              <Link
+                                href="/pricing"
+                                className="block w-full py-1.5 rounded-lg text-xs font-medium text-center bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors"
+                              >
+                                Upgrade to Pro
+                              </Link>
+                            ) : (
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => handleUseTemplate(t)}
+                                  className="flex-1 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+                                >
+                                  Customize
+                                </button>
+                                <button
+                                  onClick={() => handleAdoptTemplate(t.id)}
+                                  disabled={adoptingId === t.id}
+                                  className="flex-1 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
+                                >
+                                  {adoptingId === t.id ? 'Adding...' : 'Use Template'}
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Lock overlay */}
+                            {locked && (
+                              <div className="absolute inset-0 bg-[#0c0c0f]/70 backdrop-blur-[2px] rounded-xl flex flex-col items-center justify-center gap-2 z-10">
+                                <svg className="w-7 h-7 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                </svg>
+                                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                  Upgrade to Pro
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-xs text-gray-500 capitalize">{t.frequency}</span>
-                            <span className="text-gray-700">&#183;</span>
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-                                DIFFICULTY_COLORS[t.difficulty] || 'bg-gray-700 text-gray-300'
-                              }`}
-                            >
-                              {t.difficulty}
-                            </span>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleUseTemplate(t)}
-                              className="flex-1 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
-                            >
-                              Customize
-                            </button>
-                            <button
-                              onClick={() => handleAdoptTemplate(t.id)}
-                              disabled={adoptingId === t.id}
-                              className="flex-1 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition-colors disabled:opacity-50"
-                            >
-                              {adoptingId === t.id ? 'Adding...' : 'Use Template'}
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 ))
