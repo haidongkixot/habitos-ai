@@ -89,6 +89,45 @@ export default async function AdminDashboard() {
         />
       </div>
 
+      {/* Admin sections — quick links */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-10">
+        <Link
+          href="/admin/coaching-plans"
+          className="group block bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-emerald-500/40 hover:bg-gray-900/80 transition-colors"
+        >
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 2v20" />
+                <path d="M2 12h20" />
+                <circle cx="12" cy="12" r="9" />
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                  Coaching Plans
+                </h3>
+                <span className="text-xs text-emerald-400/80">New</span>
+              </div>
+              <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+                List, filter, edit and pause/stop user coaching plans. Includes audit log + CSV export.
+              </p>
+            </div>
+          </div>
+        </Link>
+      </div>
+
       {/* Recent users */}
       <div className="bg-gray-900 border border-gray-800 rounded-xl">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">

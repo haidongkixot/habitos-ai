@@ -1,8 +1,15 @@
 import OpenAI from 'openai'
+import type { CoachPersona } from '@prisma/client'
+import { buildCoachSystemPrompt } from '@/lib/coach/system-prompt'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-const SYSTEM_PROMPT = `You are Habitos Coach, an encouraging and knowledgeable AI habit-building coach.
+/**
+ * Legacy fallback prompt — used only when no persona is supplied (e.g.
+ * during tests or if the persona seed has not run). The persona-aware
+ * pipeline is the default path in production.
+ */
+const LEGACY_SYSTEM_PROMPT = `You are Habitos Coach, an encouraging and knowledgeable AI habit-building coach.
 
 Your expertise includes:
 - Habit formation science (cue-routine-reward loops, habit stacking, implementation intentions)
@@ -36,25 +43,32 @@ export interface CoachContext {
   totalCheckins?: number
   activeHabits?: string[]
   recentMood?: number
+  // --- Phase 2 additions (all optional for backward compatibility) ---
+  /** The user's chosen persona. If supplied, the persona system prompt is injected. */
+  persona?: CoachPersona
+  /** The user's identity statement (from their active CoachingPlan). */
+  identityStatement?: string | null
+  /** The active goal title for context injection. */
+  activeGoalTitle?: string | null
+  /** Momentum score (0-100) from the active CoachingPlan. */
+  momentumScore?: number | null
 }
 
+/**
+ * Sends a chat completion to OpenAI for the coach pipeline.
+ *
+ * Backward compatible: callers that omit `context.persona` get the legacy
+ * Habitos Coach prompt — same shape as before. Callers that include
+ * `context.persona` get the full persona-driven system prompt with
+ * coaching guardrails injected.
+ *
+ * The return shape `{ reply, fallback }` is unchanged.
+ */
 export async function chat(
   messages: { role: 'user' | 'assistant'; content: string }[],
   context?: CoachContext
 ) {
-  let systemContent = SYSTEM_PROMPT
-
-  if (context) {
-    const parts: string[] = []
-    if (context.userName) parts.push(`User's name: ${context.userName}`)
-    if (context.currentStreak !== undefined) parts.push(`Current streak: ${context.currentStreak} days`)
-    if (context.totalCheckins !== undefined) parts.push(`Total check-ins: ${context.totalCheckins}`)
-    if (context.activeHabits?.length) parts.push(`Active habits: ${context.activeHabits.join(', ')}`)
-    if (context.recentMood !== undefined) parts.push(`Recent mood rating: ${context.recentMood}/5`)
-    if (parts.length > 0) {
-      systemContent += `\n\nUser context:\n${parts.join('\n')}`
-    }
-  }
+  const systemContent = buildSystemContent(context)
 
   try {
     const completion = await openai.chat.completions.create({
@@ -78,6 +92,41 @@ export async function chat(
       fallback: true,
     }
   }
+}
+
+function buildSystemContent(context?: CoachContext): string {
+  // Persona-aware path (Phase 2)
+  if (context?.persona) {
+    return buildCoachSystemPrompt({
+      persona: context.persona,
+      user: {
+        name: context.userName ?? null,
+        identityStatement: context.identityStatement ?? null,
+      },
+      context: {
+        activeGoalTitle: context.activeGoalTitle ?? null,
+        momentumScore: context.momentumScore ?? null,
+        streakDays: context.currentStreak ?? null,
+      },
+    })
+  }
+
+  // Legacy path — preserve original Phase 1 behaviour exactly.
+  let systemContent = LEGACY_SYSTEM_PROMPT
+
+  if (context) {
+    const parts: string[] = []
+    if (context.userName) parts.push(`User's name: ${context.userName}`)
+    if (context.currentStreak !== undefined) parts.push(`Current streak: ${context.currentStreak} days`)
+    if (context.totalCheckins !== undefined) parts.push(`Total check-ins: ${context.totalCheckins}`)
+    if (context.activeHabits?.length) parts.push(`Active habits: ${context.activeHabits.join(', ')}`)
+    if (context.recentMood !== undefined) parts.push(`Recent mood rating: ${context.recentMood}/5`)
+    if (parts.length > 0) {
+      systemContent += `\n\nUser context:\n${parts.join('\n')}`
+    }
+  }
+
+  return systemContent
 }
 
 function getFallbackTip(): string {

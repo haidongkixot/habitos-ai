@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { chat, CoachContext } from '@/lib/ai-coach'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { getDefaultPersona } from '@/lib/coach/personas'
 
 const FREE_MSG_LIMIT = 3
 
@@ -109,11 +110,48 @@ export async function POST(req: Request) {
       select: { name: true },
     })
 
+    // Phase 2: resolve the user's chosen persona (or fall back to default).
+    let persona: Awaited<ReturnType<typeof getDefaultPersona>> | undefined
+    let identityStatement: string | null = null
+    let activeGoalTitle: string | null = null
+    let momentumScore: number | null = null
+    try {
+      const settings = await (prisma as any).userCoachSettings?.findUnique?.({
+        where: { userId },
+      })
+      if (settings?.personaId) {
+        const chosen = await (prisma as any).coachPersona.findUnique({
+          where: { id: settings.personaId },
+        })
+        if (chosen?.isActive) persona = chosen
+      }
+      if (!persona) persona = await getDefaultPersona()
+
+      // Pull active CoachingPlan context if any.
+      const activePlan = await (prisma as any).coachingPlan?.findFirst?.({
+        where: { userId, status: 'active' },
+        orderBy: { updatedAt: 'desc' },
+        include: { goal: { select: { title: true } } },
+      })
+      if (activePlan) {
+        identityStatement = activePlan.identityStatement ?? null
+        momentumScore = typeof activePlan.momentumScore === 'number' ? activePlan.momentumScore : null
+        activeGoalTitle = activePlan.goal?.title ?? null
+      }
+    } catch (e) {
+      console.error('[ai/chat] persona resolution failed, falling back to legacy prompt:', e)
+      persona = undefined
+    }
+
     const context: CoachContext = {
       userName: session.user.name || undefined,
       currentStreak: gamification?.currentStreak ?? 0,
       totalCheckins: gamification?.totalCheckins ?? 0,
       activeHabits: habits.map(h => h.name),
+      persona,
+      identityStatement,
+      activeGoalTitle,
+      momentumScore,
     }
 
     // Get recent conversation history

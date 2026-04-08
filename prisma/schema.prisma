@@ -9,34 +9,37 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  image         String?
-  role          String    @default("user")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  status        String    @default("active")
-  statusNote    String?
-  accounts      Account[]
-  sessions      AuthSession[]
-  habits        Habit[]
-  checkins      CheckIn[]
-  achievements  UserAchievement[]
-  gamification  UserGamification?
-  xpTransactions XpTransaction[]
-  dailyQuests   DailyQuest[]
-  userBadges    UserBadge[]
-  activityEvents ActivityEvent[]
-  notifications Notification[]
-  conversations   AssistantConversation[]
-  subscriptions    Subscription[]
-  chapterProgress  UserChapterProgress[]
-  journalEntries   JournalEntry[]
+  id                      String                   @id @default(cuid())
+  name                    String?
+  email                   String                   @unique
+  emailVerified           DateTime?
+  password                String?
+  image                   String?
+  role                    String                   @default("user")
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  status                  String                   @default("active")
+  statusNote              String?
+  accounts                Account[]
+  sessions                AuthSession[]
+  habits                  Habit[]
+  checkins                CheckIn[]
+  achievements            UserAchievement[]
+  gamification            UserGamification?
+  xpTransactions          XpTransaction[]
+  dailyQuests             DailyQuest[]
+  userBadges              UserBadge[]
+  activityEvents          ActivityEvent[]
+  notifications           Notification[]
+  conversations           AssistantConversation[]
+  subscriptions           Subscription[]
+  chapterProgress         UserChapterProgress[]
+  journalEntries          JournalEntry[]
   automaticityAssessments AutomaticityAssessment[]
-  environmentAudits EnvironmentAudit[]
+  environmentAudits       EnvironmentAudit[]
+  goals                   Goal[]
+  coachingPlans           CoachingPlan[]
+  coachingSessions        CoachingSession[]
 }
 
 model Account {
@@ -53,6 +56,7 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
 }
 
@@ -68,31 +72,33 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
+
   @@unique([identifier, token])
 }
 
 model Habit {
-  id          String    @id @default(cuid())
-  userId      String
-  name        String
-  description String?   @db.Text
-  category    String    @default("general")
-  frequency   String    @default("daily")
-  targetDays  Int       @default(7)
-  color       String    @default("#10b981")
-  icon        String    @default("check")
-  isActive    Boolean   @default(true)
-  reminderTime String?
-  intentionCue      String?
-  intentionLocation String?
-  intentionTime     String?
-  intentionStatement String? @db.Text
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  checkins    CheckIn[]
+  id                      String                   @id @default(cuid())
+  userId                  String
+  name                    String
+  description             String?                  @db.Text
+  category                String                   @default("general")
+  frequency               String                   @default("daily")
+  targetDays              Int                      @default(7)
+  color                   String                   @default("#10b981")
+  icon                    String                   @default("check")
+  isActive                Boolean                  @default(true)
+  reminderTime            String?
+  intentionCue            String?
+  intentionLocation       String?
+  intentionTime           String?
+  intentionStatement      String?                  @db.Text
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  user                    User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkins                CheckIn[]
   automaticityAssessments AutomaticityAssessment[]
-  environmentAudits EnvironmentAudit[]
+  environmentAudits       EnvironmentAudit[]
+
   @@index([userId, isActive])
 }
 
@@ -107,6 +113,7 @@ model CheckIn {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
   @@unique([habitId, date])
   @@index([userId, date])
   @@index([habitId, date])
@@ -118,6 +125,7 @@ model UserAchievement {
   achievement String
   unlockedAt  DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, achievement])
   @@index([userId])
 }
@@ -127,17 +135,17 @@ model UserAchievement {
 // ============================================================
 
 model UserGamification {
-  id             String   @id @default(cuid())
-  userId         String   @unique
-  xp             Int      @default(0)
-  level          Int      @default(1)
-  currentStreak  Int      @default(0)
-  longestStreak  Int      @default(0)
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  xp              Int      @default(0)
+  level           Int      @default(1)
+  currentStreak   Int      @default(0)
+  longestStreak   Int      @default(0)
   lastCheckinDate String?
-  totalCheckins  Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalCheckins   Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model XpTransaction {
@@ -148,20 +156,22 @@ model XpTransaction {
   detail    String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId, createdAt])
 }
 
 model DailyQuest {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   userId      String
   date        String
   questType   String
   description String
-  xpReward    Int      @default(10)
-  completed   Boolean  @default(false)
+  xpReward    Int       @default(10)
+  completed   Boolean   @default(false)
   completedAt DateTime?
-  createdAt   DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, date, questType])
   @@index([userId, date])
 }
@@ -185,6 +195,7 @@ model UserBadge {
   unlockedAt DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   badge      Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
   @@unique([userId, badgeId])
   @@index([userId])
 }
@@ -200,6 +211,7 @@ model ActivityEvent {
   metadata  String?  @db.Text
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId, type])
   @@index([createdAt])
 }
@@ -213,6 +225,7 @@ model ErrorLog {
   metadata  String?  @db.Text
   userId    String?
   createdAt DateTime @default(now())
+
   @@index([level, createdAt])
   @@index([source])
 }
@@ -222,16 +235,17 @@ model ErrorLog {
 // ============================================================
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
   type      String
   title     String
-  body      String   @db.Text
-  read      Boolean  @default(false)
+  body      String    @db.Text
+  read      Boolean   @default(false)
   readAt    DateTime?
-  metadata  String?  @db.Text
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  metadata  String?   @db.Text
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId, read])
   @@index([createdAt])
 }
@@ -248,16 +262,18 @@ model AssistantConversation {
   updatedAt DateTime           @updatedAt
   user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages  AssistantMessage[]
+
   @@index([userId, updatedAt])
 }
 
 model AssistantMessage {
-  id             String               @id @default(cuid())
+  id             String                @id @default(cuid())
   conversationId String
   role           String
-  content        String               @db.Text
-  createdAt      DateTime             @default(now())
+  content        String                @db.Text
+  createdAt      DateTime              @default(now())
   conversation   AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
   @@index([conversationId, createdAt])
 }
 
@@ -266,18 +282,19 @@ model AssistantMessage {
 // ============================================================
 
 model BlogPost {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String    @id @default(cuid())
+  slug        String    @unique
   title       String
-  excerpt     String?  @db.Text
-  content     String   @db.Text
+  excerpt     String?   @db.Text
+  content     String    @db.Text
   coverImage  String?
   authorId    String?
-  published   Boolean  @default(false)
+  published   Boolean   @default(false)
   publishedAt DateTime?
   tags        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
   @@index([published, publishedAt])
 }
 
@@ -305,18 +322,19 @@ model Plan {
 }
 
 model Subscription {
-  id              String    @id @default(cuid())
-  userId          String
-  planId          String
-  status          String    @default("active")
+  id                 String    @id @default(cuid())
+  userId             String
+  planId             String
+  status             String    @default("active")
   currentPeriodStart DateTime
   currentPeriodEnd   DateTime
-  canceledAt      DateTime?
-  stripeSubId     String?   @unique
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  plan            Plan      @relation(fields: [planId], references: [id])
+  canceledAt         DateTime?
+  stripeSubId        String?   @unique
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan               Plan      @relation(fields: [planId], references: [id])
+
   @@index([userId, status])
   @@index([stripeSubId])
 }
@@ -326,19 +344,19 @@ model Subscription {
 // ============================================================
 
 model AIGenerationLog {
-  id           String   @id @default(cuid())
-  contentType  String
-  action       String   @default("generate")
-  prompt       String   @db.Text
-  result       Json
-  model        String   @default("gpt-4o-mini")
-  tokensUsed   Int?
-  durationMs   Int?
-  status       String   @default("success")
-  error        String?  @db.Text
-  adminId      String
-  metadata     Json?
-  createdAt    DateTime @default(now())
+  id          String   @id @default(cuid())
+  contentType String
+  action      String   @default("generate")
+  prompt      String   @db.Text
+  result      Json
+  model       String   @default("gpt-4o-mini")
+  tokensUsed  Int?
+  durationMs  Int?
+  status      String   @default("success")
+  error       String?  @db.Text
+  adminId     String
+  metadata    Json?
+  createdAt   DateTime @default(now())
 
   @@index([contentType])
   @@index([adminId])
@@ -379,39 +397,41 @@ model HabitTemplate {
 // ============================================================
 
 model AcademyChapter {
-  id           String   @id @default(cuid())
-  slug         String   @unique
+  id           String                @id @default(cuid())
+  slug         String                @unique
   title        String
   subtitle     String?
-  body         String   @db.Text
+  body         String                @db.Text
   category     String
-  orderIndex   Int      @default(0)
+  orderIndex   Int                   @default(0)
   imageUrl     String?
-  readTimeMin  Int      @default(5)
+  readTimeMin  Int                   @default(5)
   keyTakeaways String[]
-  isActive     Boolean  @default(true)
-  minPlanSlug  String   @default("free")
+  isActive     Boolean               @default(true)
+  minPlanSlug  String                @default("free")
   quizData     Json?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
   progress     UserChapterProgress[]
+
   @@index([category])
   @@index([isActive, orderIndex])
 }
 
 model UserChapterProgress {
-  id          String    @id @default(cuid())
+  id          String         @id @default(cuid())
   userId      String
   chapterId   String
-  completed   Boolean   @default(false)
-  readPercent Int       @default(0)
+  completed   Boolean        @default(false)
+  readPercent Int            @default(0)
   quizScore   Int?
-  quizPassed  Boolean   @default(false)
+  quizPassed  Boolean        @default(false)
   completedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   chapter     AcademyChapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
   user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, chapterId])
   @@index([userId])
 }
@@ -428,6 +448,7 @@ model JournalEntry {
   habitName String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId, createdAt])
 }
 
@@ -443,22 +464,287 @@ model AutomaticityAssessment {
   createdAt       DateTime @default(now())
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   habit           Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
   @@index([userId, createdAt])
   @@index([habitId])
 }
 
 model EnvironmentAudit {
-  id              String   @id @default(cuid())
-  userId          String
-  habitId         String
-  cueVisibility   Int
-  frictionLevel   Int
+  id                   String   @id @default(cuid())
+  userId               String
+  habitId              String
+  cueVisibility        Int
+  frictionLevel        Int
   competingTemptations Int
-  score           Int
-  suggestions     String?  @db.Text
-  createdAt       DateTime @default(now())
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  habit           Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  score                Int
+  suggestions          String?  @db.Text
+  createdAt            DateTime @default(now())
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  habit                Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
   @@index([userId, createdAt])
   @@index([habitId])
+}
+
+// ============================================================
+// HabitOS v2 — Coaching, Reminders, Personas, Monetization
+// ============================================================
+
+model Goal {
+  id          String         @id @default(cuid())
+  userId      String
+  title       String
+  description String?        @db.Text
+  category    String // health | career | finance | relationships | growth | mindset | creativity
+  framework   String // GROW | WOOP | IDENTITY
+  targetDate  DateTime?
+  status      String         @default("active") // active | paused | stopped | completed | deleted
+  priority    Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plans       CoachingPlan[]
+
+  @@index([userId, status])
+  @@index([category])
+}
+
+model CoachingPlan {
+  id                  String            @id @default(cuid())
+  goalId              String
+  userId              String
+  framework           String
+  title               String
+  summary             String            @db.Text
+  identityStatement   String?           @db.Text
+  durationDays        Int               @default(66)
+  startDate           DateTime          @default(now())
+  endDate             DateTime?
+  status              String            @default("active") // active | paused | stopped | completed | deleted
+  momentumScore       Int               @default(50) // 0-100
+  completionPercent   Int               @default(0)
+  motivationStyle     String            @default("encouraging")
+  weeklyCheckinPrompt String?           @db.Text
+  aiModel             String? // gpt-4o-mini | o4-mini | o3
+  rawAiResponse       Json?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  goal                Goal              @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  milestones          PlanMilestone[]
+  planHabits          PlanHabit[]
+  checkins            PlanCheckin[]
+  reminders           Reminder[]
+  sessions            CoachingSession[]
+  auditLogs           PlanAuditLog[]
+
+  @@index([userId, status])
+  @@index([goalId])
+}
+
+model PlanMilestone {
+  id             String       @id @default(cuid())
+  planId         String
+  title          String
+  description    String?      @db.Text
+  weekIndex      Int
+  successMetric  String?      @db.Text
+  checkpointType String       @default("self-report") // self-report | photo | journal | quiz
+  status         String       @default("pending") // pending | completed | skipped
+  completedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  plan           CoachingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId, weekIndex])
+}
+
+model PlanHabit {
+  id                 String       @id @default(cuid())
+  planId             String
+  habitId            String? // links to existing Habit row after auto-creation
+  name               String
+  frequency          String       @default("daily") // daily | weekdays | weekends | custom
+  intentionCue       String?
+  intentionLocation  String?
+  intentionTime      String?
+  intentionStatement String?      @db.Text
+  twoMinuteVersion   String?      @db.Text
+  reward             String?      @db.Text
+  category           String?
+  isActive           Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  plan               CoachingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([habitId])
+}
+
+model PlanCheckin {
+  id        String       @id @default(cuid())
+  planId    String
+  userId    String
+  weekIndex Int
+  content   String?      @db.Text
+  mood      Int? // 1-5
+  proofType String? // self-report | photo | journal | quiz
+  proofUrl  String?
+  verified  Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  plan      CoachingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId, weekIndex])
+  @@index([userId])
+}
+
+model CoachingSession {
+  id         String        @id @default(cuid())
+  planId     String?
+  userId     String
+  personaId  String?
+  messages   Json // [{role, content, timestamp}]
+  tokensUsed Int?
+  model      String?
+  createdAt  DateTime      @default(now())
+  plan       CoachingPlan? @relation(fields: [planId], references: [id], onDelete: SetNull)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([planId])
+}
+
+model Reminder {
+  id           String        @id @default(cuid())
+  planId       String?
+  userId       String
+  planHabitId  String?
+  type         String // habit | milestone | motivation | recovery | celebration
+  title        String
+  body         String        @db.Text
+  channel      String // inapp | email | push | all
+  scheduledFor DateTime
+  dispatchedAt DateTime?
+  status       String        @default("pending") // pending | sent | failed | cancelled
+  metadata     Json?
+  createdAt    DateTime      @default(now())
+  plan         CoachingPlan? @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([status, scheduledFor])
+  @@index([userId])
+  @@index([planId])
+}
+
+model MotivationEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // streak_celebration | missed_recovery | milestone | daily_motivation | comeback
+  content   String   @db.Text
+  personaId String?
+  model     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Nudge {
+  id          String    @id @default(cuid())
+  userId      String
+  type        String // upgrade_goal | upgrade_push | upgrade_customize | streak_14 | streak_66
+  title       String
+  body        String    @db.Text
+  ctaText     String?
+  ctaUrl      String?
+  shownAt     DateTime  @default(now())
+  dismissedAt DateTime?
+  clickedAt   DateTime?
+
+  @@index([userId, shownAt])
+}
+
+model StreakFreeze {
+  id        String    @id @default(cuid())
+  userId    String
+  habitId   String?
+  usedAt    DateTime  @default(now())
+  expiresAt DateTime?
+  reason    String?
+
+  @@index([userId, usedAt])
+}
+
+model CoachPersona {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  name         String
+  gender       String // M | F | NB
+  style        String // mentor | cheerleader | drill_sergeant | professor | friend | zen | athlete | executive | therapist | artist | entrepreneur | philosopher
+  tone         String // warm | playful | intense | scholarly | reflective | firm
+  systemPrompt String   @db.Text
+  shortBio     String   @db.Text
+  avatarSeed   String // DiceBear seed
+  avatarStyle  String   @default("personas") // DiceBear style
+  minPlanSlug  String   @default("free") // free | starter | pro | premium
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model UserCoachSettings {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  personaId         String?
+  customName        String?
+  customGender      String? // M | F | NB | null = persona default
+  outfitPack        String? // athletic | business | casual | zen_robe | lab_coat | streetwear | formal
+  accent            String? // us | uk | aus | ind | generic
+  relationshipStyle String? // mentor | friend | therapist | drill_sergeant
+  customSystemAdd   String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([personaId])
+}
+
+model PlanAuditLog {
+  id        String       @id @default(cuid())
+  planId    String
+  adminId   String?
+  userId    String?
+  action    String // created | updated | paused | stopped | resumed | deleted | milestone_completed | habit_added
+  before    Json?
+  after     Json?
+  reason    String?      @db.Text
+  createdAt DateTime     @default(now())
+  plan      CoachingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId, createdAt])
+  @@index([adminId])
+}
+
+// Push subscription storage
+model PushSubscription {
+  id         String   @id @default(cuid())
+  userId     String
+  endpoint   String   @unique
+  p256dhKey  String
+  authKey    String
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Notification delivery preferences
+model NotificationPreference {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  inappEnabled Boolean  @default(true)
+  emailEnabled Boolean  @default(true)
+  pushEnabled  Boolean  @default(false)
+  quietStart   String? // "22:00"
+  quietEnd     String? // "07:00"
+  weekendQuiet Boolean  @default(false)
+  cadence      String   @default("normal") // minimal | normal | intense
+  updatedAt    DateTime @updatedAt
 }

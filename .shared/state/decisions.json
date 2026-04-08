@@ -1,0 +1,137 @@
+{
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "date": "2026-04-08",
+      "decision": "Clone HarmonyMap 8-role multi-agent structure into HabitOS",
+      "context": "v2 upgrade is ~35-50 hours of bundled work; single-agent execution would be slow and error-prone. Multi-role parallelism gated by signal bus enables safer, faster delivery.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-002",
+      "date": "2026-04-08",
+      "decision": "Implement 3 coaching frameworks: GROW, WOOP, Atomic Habits Identity",
+      "context": "Competitive research (10 platforms) + HabitOS RESEARCH-FOUNDATION.md alignment. SMART/OKR/Tiny Habits/CLEAR/FUEL excluded with rationale in plan Section 5.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-003",
+      "date": "2026-04-08",
+      "decision": "Use Vercel Cron (not Neon pg_cron or external scheduler)",
+      "context": "HabitOS already on Vercel Pro tier; free cron allotment covers 3 jobs; easier to debug than pg_cron; idempotent dispatch via dispatchedAt.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-004",
+      "date": "2026-04-08",
+      "decision": "DiceBear for persona avatars (not custom illustrations)",
+      "context": "MIT licensed, free, client-side rendered, deterministic from seed, supports outfit/clothing variants via query params. Zero asset hosting cost.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-005",
+      "date": "2026-04-08",
+      "decision": "Tier model: Free / Starter $9 / Pro $19 / Premium $39",
+      "context": "Current HabitOS is Free/Pro only. 4-tier ladder matches Fabulous/Habitify/Replika patterns. Premium gated on coach customization + o3 weekly review + cross-app integration.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-006",
+      "date": "2026-04-08",
+      "decision": "Admin coaching plan routes at /admin/coaching-plans (NOT /admin/plans)",
+      "context": "Existing /admin/plans manages subscription tier Plans; naming collision would confuse admins. Separate namespace keeps both concerns clear.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-007",
+      "date": "2026-04-08",
+      "decision": "Reuse academy plan-gate helper (getUserPlanSlug) for coach personas",
+      "context": "Phase 2 backend needed plan tier resolution for persona access. src/lib/academy/access.ts already implements Subscription->Plan lookup with 'free' fallback. Single source of truth avoids drift.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-008",
+      "date": "2026-04-08",
+      "decision": "Premium-gated coach fields: outfitPack + accent only",
+      "context": "UserCoachSettings has 6 customization fields. Spec said 'custom outfit + custom voice' are Premium. outfitPack = outfit, accent = closest to voice. customName/customGender/relationshipStyle/customSystemAdd open to all paying tiers (Starter+). Phase 6 customize page must mirror this.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-009",
+      "date": "2026-04-08",
+      "decision": "getDefaultPersona() uses fallback chain: 'alex' -> 'alex-default' -> any free -> any active",
+      "context": "Seed uses 'alex-default' slug, spec referenced 'alex'. Self-healing resolver avoids a hard dependency on a single slug string.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-010",
+      "date": "2026-04-08",
+      "decision": "VAPID public key endpoint returns { publicKey } not { key }",
+      "context": "M4 contract mismatch: backend shipped { key }, builder fetched { publicKey }. Aligned to W3C PushSubscription terminology (applicationServerKey is the public key). Frontend already uses publicKey naming throughout push-registration.tsx.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-011",
+      "date": "2026-04-08",
+      "decision": "Phase 5 admin console split: builder owns all /admin/coaching-plans/* pages; backend owns /api/admin/coaching-plans/*; data-engineer owns analytics lib + CSV serializer",
+      "context": "3-way file allowlist non-overlap: builder writes pages + client components only, backend writes route handlers + uses lib helpers, data-engineer writes pure aggregation functions. Audit log writer reused from existing src/lib/coaching/audit-log.ts.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-012",
+      "date": "2026-04-08",
+      "decision": "Mutation routes inline tx.planAuditLog.create instead of calling writePlanAudit() helper",
+      "context": "writePlanAudit() uses bare prisma client outside any transaction (best-effort, swallows errors). For admin mutations we need atomicity — if the audit row fails, the plan update must roll back too. Backend agent inlined the audit create inside prisma.$transaction(async (tx) => ...). writePlanAudit() remains the right tool for non-critical/system audit writes.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-013",
+      "date": "2026-04-08",
+      "decision": "CSV export RFC 4180 compliant + OWASP formula injection guard",
+      "context": "Plan CSVs may contain user-controlled text (titles, summaries, persona names). data-engineer's serializePlansToCsv prefixes any cell starting with =,+,-,@ with a single quote ' to neutralize Excel/Sheets formula execution. Standard fields are still quoted when they contain ,\"\\r\\n with internal quotes doubled.",
+      "author": "data-engineer"
+    },
+    {
+      "id": "DEC-014",
+      "date": "2026-04-08",
+      "decision": "Phase 6 monetization split: backend owns Stripe lib + webhook + billing API; builder owns /pricing + /coach/customize + /settings/billing pages; designer owns customize UI primitives + upsell modal; marketer owns tier copy",
+      "context": "4-way parallel ship. Premium-gated fields per DEC-008 (outfitPack + accent only). Stripe webhook is the source of truth for subscription state — DB sync happens there, not in checkout success page. Webhook MUST verify signature (stripe.webhooks.constructEvent) and use event.id idempotency to survive Stripe retries.",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-015",
+      "date": "2026-04-08",
+      "decision": "Stripe webhook idempotency uses SiteSettings KV table with key='stripe.webhook.event:<event.id>'",
+      "context": "M1 schema has no dedicated ProcessedWebhookEvent table. Backend explored 3 options: PlanAuditLog (rejected — FK to CoachingPlan, billing rows have no plan), AIGenerationLog (rejected — required adminId column, semantic mismatch), SiteSettings (chosen — generic key/value String with @unique on key). tryClaimEvent() in lib/billing/webhook-events.ts atomically claims via prisma.create() and catches P2002 unique-violation as 'already processed'. Trade-off: claim is irreversible — if dispatch fails AFTER claim, the event is lost to retries. Acceptable since Stripe transient handler failures are rare and the alternative (claim-after-dispatch) races. A future migration could add a dedicated ProcessedWebhookEvent table.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-016",
+      "date": "2026-04-08",
+      "decision": "Stripe customer lookup is by email each call (no User.stripeCustomerId column)",
+      "context": "M1 User schema has no stripeCustomerId. Backend uses stripe.customers.list({ email, limit: 1 }) on every checkout/portal call (~150ms latency). Mitigated by stamping customer.metadata.userId in checkout so syncSubscriptionFromStripe prefers the metadata path during webhook processing — email lookup only fires as a fallback. A future migration could add User.stripeCustomerId for performance.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-017",
+      "date": "2026-04-08",
+      "decision": "Subscription.cancelAtPeriodEnd derived heuristically (no schema column)",
+      "context": "M1 Subscription has canceledAt but no cancelAtPeriodEnd boolean. /api/billing/current derives the flag as `(canceledAt !== null && currentPeriodEnd > now && status !== 'canceled')`. This matches the user-visible 'will cancel on X' UX without a schema migration. Builder consumes the boolean from the API; the underlying derivation is invisible.",
+      "author": "backend-engineer"
+    },
+    {
+      "id": "DEC-018",
+      "date": "2026-04-08",
+      "decision": "PM may proxy completion signals when an agent ships deliverables but quota-dies before posting",
+      "context": "M6 builder agent shipped 8 files (1608 LOC, full project tsc clean) but hit Asia/Bangkok 5pm quota in the wrap-up turn before posting SIG-HABITOS-PHASE6-UI-COMPLETE. PM verified files on disk + ran final tsc + posted SIG-HABITOS-PHASE6-UI-COMPLETE-PROXY on the agent's behalf with file inventory + LOC counts as evidence. This unblocks M7 without triggering a wasteful re-launch (1st-attempt M4 quota death required full rollback because partial files were broken; M6 is verified-clean, so proxy is correct). Rule: PM proxy is allowed ONLY when (a) all deliverables are physically present, (b) full project tsc clean, and (c) the agent's last work item references resolving cross-agent contracts (which the M6 backend completion signal explicitly confirmed).",
+      "author": "pm"
+    },
+    {
+      "id": "DEC-019",
+      "date": "2026-04-08",
+      "decision": "M7 executed directly by PM in single-pass instead of 3-way agent parallel ship",
+      "context": "M6 backend + builder agents both hit Asia/Bangkok 5pm quota at the end of M6. Launching new tester/reporter/pm agents into the same quota window risked another partial-completion / rollback cycle. Trade-off: M7 is documentation-only with no tsc gate, PM has full M0-M6 context in working memory, and single-pass writing produces more coherent docs anyway. PM shipped 6 docs (TEST-PLAN.md, RELEASE-NOTES-v2.md, ADMIN-COACHING-GUIDE.md, DEPLOY-CHECKLIST-v2.md, ROLLBACK-PLAN.md, smoke-test-results.md template) in a single sequential pass. Limitation: smoke-test-results.md is shipped as a fillable template rather than executed against a live staging environment, since PM cannot run a browser session. Rule: PM-direct execution is allowed for documentation-only milestones when (a) no tsc/build gate exists, (b) PM has full context, (c) agent quota is exhausted or at risk.",
+      "author": "pm"
+    }
+  ]
+}

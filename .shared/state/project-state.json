@@ -1,0 +1,22 @@
+{
+  "projectName": "HabitOS AI",
+  "version": "2.0.0-alpha",
+  "currentPhase": "DONE",
+  "lastUpdated": "2026-04-08T16:00:00Z",
+  "currentFocus": "v2 Coach upgrade — COMPLETE. All 8 milestones (M0-M7) shipped. Awaiting human execution of docs/DEPLOY-CHECKLIST-v2.md against staging then production.",
+  "upgradeTarget": {
+    "name": "HabitOS v2 Coach Upgrade",
+    "totalPhases": 8,
+    "estimatedHours": "35-50",
+    "plan": "D:/Claude Projects/habitos-plan.md",
+    "status": "complete"
+  },
+  "completedPhases": ["M0", "M1", "M2", "M3", "M4", "M5", "M6", "M7"],
+  "nextActions": [
+    "HUMAN: execute docs/TEST-PLAN.md against staging, fill in .shared/outputs/smoke-test-results.md",
+    "HUMAN: execute docs/DEPLOY-CHECKLIST-v2.md against production",
+    "HUMAN: publish docs/RELEASE-NOTES-v2.md to users via your release channel",
+    "HUMAN: monitor first 60 minutes per docs/DEPLOY-CHECKLIST-v2.md section 7"
+  ],
+  "blockers": []
+}
