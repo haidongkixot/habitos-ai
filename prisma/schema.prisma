@@ -748,3 +748,14 @@ model NotificationPreference {
   cadence      String   @default("normal") // minimal | normal | intense
   updatedAt    DateTime @updatedAt
 }
+
+model EmailSubscriber {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  source       String    @default("landing_page")
+  status       String    @default("active")
+  subscribedAt DateTime  @default(now())
+  unsubAt      DateTime?
+
+  @@index([status])
+}
