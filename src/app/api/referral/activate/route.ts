@@ -9,7 +9,7 @@ export async function POST() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const userId = (session.user as any).id as string
+  const userId = (session!.user as any).id as string
 
   // Find pending referral reward for this user
   const reward = await prisma.referralReward.findUnique({
