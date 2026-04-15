@@ -9,10 +9,10 @@ function generateCode(): string {
 
 export async function POST() {
   const session = await getServerSession(authOptions)
-  if (!session?.user?.id) {
+  if (!(session?.user as any)?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  const userId = session.user.id
+  const userId = (session!.user as any).id as string
   let referralCode = await prisma.referralCode.findUnique({
     where: { userId },
     include: { referrals: true },
