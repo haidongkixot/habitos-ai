@@ -104,6 +104,18 @@ export default function DashboardPage() {
         )}
       </div>
 
+      {/* Invite Friends */}
+      <Link href="/settings/referral" className="card card-hover flex items-center justify-between group">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🎁</span>
+          <div>
+            <h3 className="text-white font-semibold group-hover:text-emerald-400 transition-colors">Invite Friends, Earn Free Months</h3>
+            <p className="text-zinc-400 text-sm">Share your link and get 1 free month of Pro for each friend who joins</p>
+          </div>
+        </div>
+        <span className="text-emerald-400 text-sm font-medium shrink-0 ml-4">Get Link →</span>
+      </Link>
+
       <div className="card card-hover">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold text-white">AI Coach</h2>
