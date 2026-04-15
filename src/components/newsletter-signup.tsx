@@ -26,7 +26,7 @@ export default function NewsletterSignup() {
   if (status === 'success') {
     return (
       <div className="text-center py-4">
-        <p className="text-lg font-medium">You're in!</p>
+        <p className="text-lg font-medium">You&apos;re in!</p>
         <p className="text-sm opacity-70 mt-1">Check your inbox for weekly insights.</p>
       </div>
     )
