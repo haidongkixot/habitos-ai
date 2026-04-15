@@ -1,9 +1,12 @@
+import type { PlanSlug, BillingInterval } from '@/lib/stripe/tier-resolver'
+export type { PlanSlug, BillingInterval }
+
 const PAID_PLAN_SLUGS = ['starter', 'pro', 'premium'] as const
 type PaidPlanSlug = 'starter' | 'pro' | 'premium'
-type BillingInterval = 'monthly' | 'yearly'
 
 export function getPayPalPlanId(slug: PaidPlanSlug, interval: BillingInterval): string | null {
-  return process.env[`PAYPAL_PLAN_${slug.toUpperCase()}_${interval.toUpperCase()}`] ?? null
+  const key = `PAYPAL_PLAN_${slug.toUpperCase()}_${interval.toUpperCase()}`
+  return process.env[key] ?? null
 }
 
 export function getPlanSlugFromPayPalPlanId(paypalPlanId: string): { slug: PaidPlanSlug; interval: BillingInterval } | null {
