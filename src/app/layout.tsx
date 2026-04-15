@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/footer'
 import GoogleAnalytics from '@/components/google-analytics'
+import EcosystemBar from '@/components/ecosystem-bar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-[#0c0c0f] text-zinc-100 min-h-screen`}><GoogleAnalytics />{children}<Footer /></body>
+      <body className={`${inter.className} bg-[#0c0c0f] text-zinc-100 min-h-screen`}><GoogleAnalytics /><EcosystemBar />{children}<Footer /></body>
     </html>
   )
 }
