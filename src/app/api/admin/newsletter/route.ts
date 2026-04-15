@@ -15,9 +15,9 @@ export async function GET() {
     prisma.emailSubscriber.count({ where: { status: 'active' } }),
     prisma.emailSubscriber.count({ where: { status: 'unsubscribed' } }),
     prisma.emailSubscriber.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { subscribedAt: 'desc' },
       take: 50,
-      select: { id: true, email: true, status: true, source: true, createdAt: true },
+      select: { id: true, email: true, status: true, source: true, subscribedAt: true },
     }),
   ])
   return NextResponse.json({ total, active, unsubscribed, subscribers: recent })
