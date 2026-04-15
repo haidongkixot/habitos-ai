@@ -331,6 +331,7 @@ model Subscription {
   currentPeriodEnd   DateTime
   canceledAt         DateTime?
   stripeSubId        String?   @unique
+  paypalSubId        String?   @unique
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)

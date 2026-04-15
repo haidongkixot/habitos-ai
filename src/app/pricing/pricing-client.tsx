@@ -146,6 +146,8 @@ interface TierCardProps {
   errorMessage: string | null
   onUpgrade: (slug: TierSlug) => void
   onManage: () => void
+  loadingPayPal: string | null
+  onPayPalCheckout: (slug: string) => void
 }
 
 function TierCardStub({
@@ -159,6 +161,8 @@ function TierCardStub({
   errorMessage,
   onUpgrade,
   onManage,
+  loadingPayPal,
+  onPayPalCheckout,
 }: TierCardProps) {
   const isFree = copy.slug === 'free'
   const price = billingCycle === 'yearly' ? copy.priceYearly : copy.priceMonthly
@@ -278,6 +282,24 @@ function TierCardStub({
         {ctaLabel}
       </button>
 
+      {!isFree && (
+        <button
+          onClick={() => onPayPalCheckout(copy.slug)}
+          disabled={loadingPayPal !== null}
+          className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-[#009CDE] text-sm font-semibold transition disabled:opacity-50"
+        >
+          {loadingPayPal === copy.slug ? 'Redirecting...' : (
+            <>
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-[#009CDE]" aria-hidden="true">
+                <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 3.993-.032.17a.804.804 0 0 1-.794.679H7.72a.483.483 0 0 1-.477-.558L7.418 21h1.518l.95-6.02h1.385c4.678 0 7.75-2.203 8.796-6.502z"/>
+                <path d="M9.738 6.145c.24-.394.63-.696 1.086-.812.234-.06.48-.09.73-.09h5.245c.622 0 1.2.033 1.73.1a6.7 6.7 0 0 1 1.017.228c.29.09.557.203.8.34.257-1.632-.002-2.743-.887-3.75C18.392.947 16.524.5 14.073.5H7.02a.96.96 0 0 0-.949.812L3.082 17.43a.578.578 0 0 0 .57.668H7.42L9.738 6.145z"/>
+              </svg>
+              Pay with PayPal
+            </>
+          )}
+        </button>
+      )}
+
       {errorSlug === copy.slug && errorMessage && (
         <div
           role="alert"
@@ -365,6 +387,7 @@ export default function PricingClient() {
   const [inFlightSlug, setInFlightSlug] = useState<string | null>(null)
   const [errorSlug, setErrorSlug] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [loadingPayPal, setLoadingPayPal] = useState<string | null>(null)
 
   const fetchCurrent = useCallback(async () => {
     if (!isSignedIn) {
@@ -429,6 +452,20 @@ export default function PricingClient() {
     [billingCycle, isSignedIn]
   )
 
+  async function handlePayPalCheckout(slug: string) {
+    setLoadingPayPal(slug)
+    try {
+      const res = await fetch('/api/billing/paypal/create-subscription', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceSlug: slug, interval: 'monthly' }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+      else alert(data.error || 'PayPal unavailable')
+    } catch { alert('Network error') }
+    finally { setLoadingPayPal(null) }
+  }
+
   const handleManage = useCallback(async () => {
     setInFlightSlug('portal')
     setErrorSlug(null)
@@ -487,6 +524,8 @@ export default function PricingClient() {
             errorMessage={errorMessage}
             onUpgrade={handleUpgrade}
             onManage={handleManage}
+            loadingPayPal={loadingPayPal}
+            onPayPalCheckout={handlePayPalCheckout}
           />
         ))}
       </div>
