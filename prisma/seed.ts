@@ -47,6 +47,10 @@ async function main() {
   const marcus = await prisma.user.upsert({ where: { email: 'marcus.johnson@example.com' }, update: {}, create: { email: 'marcus.johnson@example.com', name: 'Marcus Johnson', password: demoHash } })
   const emma = await prisma.user.upsert({ where: { email: 'emma.wilson@example.com' }, update: {}, create: { email: 'emma.wilson@example.com', name: 'Emma Wilson', password: demoHash } })
   const alex = await prisma.user.upsert({ where: { email: 'alex.rivera@example.com' }, update: {}, create: { email: 'alex.rivera@example.com', name: 'Alex Rivera', password: demoHash } })
+  // Tier test accounts
+  const freeUser = await prisma.user.upsert({ where: { email: 'free@habitos.ai' }, update: {}, create: { email: 'free@habitos.ai', name: 'Free Tester', password: demoHash } })
+  const proUser2 = await prisma.user.upsert({ where: { email: 'pro@habitos.ai' }, update: {}, create: { email: 'pro@habitos.ai', name: 'Pro Tester', password: demoHash } })
+  const teamUser = await prisma.user.upsert({ where: { email: 'team@habitos.ai' }, update: {}, create: { email: 'team@habitos.ai', name: 'Team Tester', password: demoHash } })
   console.log('  ✓ Users')
 
   // Subscriptions
@@ -54,6 +58,8 @@ async function main() {
     where: { id: 'sub-sarah-hb' }, update: {},
     create: { id: 'sub-sarah-hb', userId: sarah.id, planId: proPlan.id, status: 'active', currentPeriodStart: daysAgo(30), currentPeriodEnd: daysAgo(-30) },
   })
+  await prisma.subscription.upsert({ where: { id: 'sub-pro-ho' }, update: {}, create: { id: 'sub-pro-ho', userId: proUser2.id, planId: proPlan.id, status: 'active', currentPeriodStart: daysAgo(15), currentPeriodEnd: daysAgo(-15) } })
+  await prisma.subscription.upsert({ where: { id: 'sub-team-ho' }, update: {}, create: { id: 'sub-team-ho', userId: teamUser.id, planId: teamPlan.id, status: 'active', currentPeriodStart: daysAgo(15), currentPeriodEnd: daysAgo(-15) } })
   console.log('  ✓ Subscriptions')
 
   // Habits for Sarah
