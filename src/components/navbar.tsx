@@ -1,12 +1,19 @@
 'use client'
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+function initialOf(name?: string | null, email?: string | null): string {
+  const src = (name || email || '?').trim()
+  return src.charAt(0).toUpperCase() || '?'
+}
 
 export default function Navbar() {
   const { data: session } = useSession()
   const [open, setOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [userPlan, setUserPlan] = useState<string>('free')
+  const menuRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (session) {
@@ -16,6 +23,26 @@ export default function Navbar() {
         .catch(() => {})
     }
   }, [session])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    function onClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onClick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [menuOpen])
+
+  const userInitial = initialOf(session?.user?.name, session?.user?.email)
 
   return (
     <nav className="bg-[#0c0c0f]/80 backdrop-blur-xl border-b border-white/[0.06] sticky top-0 z-40">
@@ -40,7 +67,7 @@ export default function Navbar() {
             <Link href="/habits" className="text-zinc-400 hover:text-white transition-colors text-sm">Habits</Link>
             <Link href="/progress" className="text-zinc-400 hover:text-white transition-colors text-sm">Progress</Link>
             <Link href="/academy" className="text-zinc-400 hover:text-white transition-colors text-sm">Academy</Link>
-            <Link href="/settings/notifications" className="text-zinc-400 hover:text-white transition-colors text-sm flex items-center gap-1.5" aria-label="Settings">
+            <Link href="/settings" className="text-zinc-400 hover:text-white transition-colors text-sm flex items-center gap-1.5" aria-label="Settings">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -54,7 +81,55 @@ export default function Navbar() {
                 }`}>
                   {userPlan === 'pro' ? 'Pro' : 'Free'}
                 </Link>
-                <button onClick={() => signOut()} className="text-zinc-400 hover:text-white text-sm transition-colors">Sign Out</button>
+                <div ref={menuRef} className="relative">
+                  <button
+                    onClick={() => setMenuOpen(o => !o)}
+                    aria-haspopup="menu"
+                    aria-expanded={menuOpen}
+                    aria-label="User menu"
+                    className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold text-sm hover:ring-2 hover:ring-emerald-400/50 transition-all"
+                  >
+                    {userInitial}
+                  </button>
+                  {menuOpen && (
+                    <div
+                      role="menu"
+                      className="absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-[#0c0c0f]/95 backdrop-blur-xl shadow-xl py-2"
+                    >
+                      <div className="px-3 pb-2 mb-1 border-b border-white/[0.06]">
+                        <p className="text-sm text-white truncate">
+                          {session.user?.name || session.user?.email}
+                        </p>
+                        {session.user?.name && (
+                          <p className="text-xs text-zinc-500 truncate">{session.user.email}</p>
+                        )}
+                      </div>
+                      <Link
+                        href="/profile"
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                        role="menuitem"
+                      >
+                        Profile
+                      </Link>
+                      <Link
+                        href="/settings"
+                        onClick={() => setMenuOpen(false)}
+                        className="block px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                        role="menuitem"
+                      >
+                        Settings
+                      </Link>
+                      <button
+                        onClick={() => { setMenuOpen(false); signOut() }}
+                        className="w-full text-left block px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-white transition-colors"
+                        role="menuitem"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <Link href="/login" className="btn-primary text-sm !px-5 !py-2">Sign In</Link>
@@ -66,6 +141,25 @@ export default function Navbar() {
             </svg>
           </button>
         </div>
+        {open && (
+          <div className="md:hidden pb-4 space-y-1 border-t border-white/[0.06] pt-3">
+            <Link href="/dashboard" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Dashboard</Link>
+            <Link href="/goals" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Goals</Link>
+            <Link href="/reminders" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Reminders</Link>
+            <Link href="/habits" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Habits</Link>
+            <Link href="/progress" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Progress</Link>
+            <Link href="/academy" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Academy</Link>
+            <Link href="/settings" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Settings</Link>
+            {session ? (
+              <>
+                <Link href="/profile" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Profile</Link>
+                <button onClick={() => { setOpen(false); signOut() }} className="block w-full text-left px-2 py-2 text-sm text-zinc-300 hover:text-white">Sign Out</button>
+              </>
+            ) : (
+              <Link href="/login" onClick={() => setOpen(false)} className="block px-2 py-2 text-sm text-zinc-300 hover:text-white">Sign In</Link>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   )
